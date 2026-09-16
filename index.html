@@ -147,7 +147,7 @@
 
     .header-actions {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
     }
 
@@ -159,6 +159,9 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .header-actions button:hover { background: #e2e8f0; }
 
@@ -166,6 +169,43 @@
       background: #fee2e2 !important;
       color: #b91c1c !important;
       border-color: #fca5a5 !important;
+    }
+
+    /* অবতার স্টাইল */
+    .header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #b91c1c;
+    }
+
+    .table-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      vertical-align: middle;
+      border: 1px solid #cbd5e1;
+    }
+
+    .avatar-preview-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px dashed #cbd5e1;
+      margin: 0 auto 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .avatar-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     /* মেট্রিক্স কার্ড */
@@ -790,6 +830,7 @@
       </div>
     </div>
     <div class="header-actions">
+      <img id="headerUserAvatar" class="header-avatar" src="https://placehold.co/100x100/cbd5e1/475569?text=User" alt="Avatar">
       <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;"> ইউজার ম্যানেজমেন্ট</button>
       <button onclick="openProfileModal()">👤 আমার প্রোফাইল</button>
       <button class="btn-logout" onclick="logout()">লগআউট</button>
@@ -1103,6 +1144,15 @@
     </div>
     
     <form id="addUserForm" style="margin-bottom: 18px;">
+      <div class="avatar-preview-box">
+        <img id="newUserAvatarPreview" class="avatar-preview-img" src="https://placehold.co/150x150/cbd5e1/475569?text=150x150" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label>প্রোফাইল ছবি (Square: 150×150 to 300×300 px, Max 200KB)</label>
+        <input type="file" id="newUserAvatarFile" accept="image/png, image/jpeg, image/webp" onchange="previewImageFile(this, 'newUserAvatarPreview', 'newUserAvatarBase64')">
+        <input type="hidden" id="newUserAvatarBase64">
+      </div>
+
       <div class="row">
         <div class="form-group" style="flex:1;">
           <label>ব্যবহারকারীর নাম</label>
@@ -1124,6 +1174,7 @@
       <table style="font-size:12px;">
         <thead>
           <tr>
+            <th>ছবি</th>
             <th>নাম</th>
             <th>ইমেইল</th>
             <th>পাসওয়ার্ড</th>
@@ -1145,6 +1196,16 @@
     </div>
     <form id="editUserForm">
       <input type="hidden" id="editUserTargetId">
+      
+      <div class="avatar-preview-box">
+        <img id="editUserAvatarPreview" class="avatar-preview-img" src="https://placehold.co/150x150/cbd5e1/475569?text=150x150" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label>ছবি পরিবর্তন (Max 200KB, 1:1 অনুপাত)</label>
+        <input type="file" id="editUserAvatarFile" accept="image/png, image/jpeg, image/webp" onchange="previewImageFile(this, 'editUserAvatarPreview', 'editUserAvatarBase64')">
+        <input type="hidden" id="editUserAvatarBase64">
+      </div>
+
       <div class="form-group">
         <label>ব্যবহারকারীর নাম</label>
         <input type="text" id="editUserName" required>
@@ -1164,12 +1225,21 @@
 
 <!-- নিজস্ব প্রোফাইল এডিট মডাল -->
 <div class="modal-backdrop" id="profileModal">
-  <div class="modal-box" style="max-width: 380px;">
+  <div class="modal-box" style="max-width: 400px;">
     <div class="modal-header">
       <h3 style="margin:0; font-size:16px;">👤 আমার প্রোফাইল ও পাসওয়ার্ড পরিবর্তন</h3>
       <button class="close-btn" onclick="closeProfileModal()">&times;</button>
     </div>
     <form id="profileEditForm">
+      <div class="avatar-preview-box">
+        <img id="myAvatarPreview" class="avatar-preview-img" src="https://placehold.co/150x150/cbd5e1/475569?text=150x150" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label>প্রোফাইল ছবি পরিবর্তন (150×150 থেকে 300×300 px, Max 200KB)</label>
+        <input type="file" id="myAvatarFile" accept="image/png, image/jpeg, image/webp" onchange="previewImageFile(this, 'myAvatarPreview', 'myAvatarBase64')">
+        <input type="hidden" id="myAvatarBase64">
+      </div>
+
       <div class="form-group">
         <label>আমার নাম</label>
         <input type="text" id="profileName" required>
@@ -1199,7 +1269,7 @@
         <div>
           <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
           <p>দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
-          <p>হেড অফিস: ২৩৮, শিরীণ পয়েন্ট, মডেল স্কুল রোড, গোপালগঞ্জ - ৮১০০ |<br> ফোন: +৮৮০ ১৭৫০৯৪১৯৪০, +৮৮০ ১৯৩০৯০০৮৬৭</p>
+          <p>হেড অফিস: ২৩৮, শিরীণ পয়েন্ট, মডেল স্কুল রোড, গোপালগঞ্জ - ৮১০০ |<br> ফোন: +৮৮০ ১৭৫০৯৪১৯৪০, +৮৮০ ১৯৩০৯০০৮৬৭</p>
         </div>
         <div style="text-align: right;">
           <h2 style="font-size: 18px; text-transform: uppercase; margin:0;">বিজ্ঞাপন বিল ও ভ্যাট চালান</h2>
@@ -1355,6 +1425,7 @@
   const usersRef = db.ref('users');
 
   const SESSION_KEY = 'bhorerbani_active_session_v3';
+  const DEFAULT_AVATAR = "https://placehold.co/150x150/cbd5e1/475569?text=User";
 
   let currentFilter = 'all';
   let filterStartDate = '';
@@ -1363,25 +1434,54 @@
   let adsList = [];
   let usersList = [];
 
-  // ফায়ারবেস থেকে রিয়েলটাইম ইউজার সিন্ক
+  // ইমেজ সাইজ চেকিং ও Base64 কনভার্সন ফাংশন
+  function previewImageFile(input, previewImgId, hiddenInputId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (file.size > 200 * 1024) {
+      alert("ছবির সাইজ খুব বড়! দয়া করে ২০০ KB এর কম সাইজের ছবি আপলোড করুন। (প্রস্তাবিত মাপ: 150x150 থেকে 300x300 px)");
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById(previewImgId).src = e.target.result;
+      document.getElementById(hiddenInputId).value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ফায়ারবেস থেকে রিয়েলটাইম ইউজার সিন্ক
   usersRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
       usersList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
     } else {
-      // ডিফল্ট অ্যাডমিন তৈরি
       const initialAdmin = {
         name: "প্রধান অ্যাডমিন",
         email: "admin@bhorerbani.com",
         pass: "admin123",
+        avatar: "",
         isSuper: true
       };
       usersRef.push(initialAdmin);
     }
+
+    const sessionUser = getActiveSession();
+    if (sessionUser) {
+      const current = usersList.find(u => u.id === sessionUser.id || u.email === sessionUser.email);
+      if (current) {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(current));
+        document.getElementById('headerUserAvatar').src = current.avatar || DEFAULT_AVATAR;
+      }
+    }
+
     renderUserList();
   });
 
-  // ফায়ারবেস থেকে রিয়েলটাইম বিজ্ঞাপন ডেটা সিন্ক
+  // ফায়ারবেস থেকে রিয়েলটাইম বিজ্ঞাপন ডেটা সিন্ক
   adsRef.on('value', (snapshot) => {
     const data = snapshot.val();
     adsList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : [];
@@ -1430,6 +1530,7 @@
     if (sessionUser) {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('dashboard-container').style.display = 'block';
+      document.getElementById('headerUserAvatar').src = sessionUser.avatar || DEFAULT_AVATAR;
 
       if (sessionUser.isSuper) {
         document.getElementById('currentUserRoleDisplay').innerText = `[অ্যাডমিন: ${sessionUser.name}]`;
@@ -1461,6 +1562,8 @@
       return;
     }
     document.getElementById('userModal').style.display = 'flex';
+    document.getElementById('newUserAvatarPreview').src = DEFAULT_AVATAR;
+    document.getElementById('newUserAvatarBase64').value = '';
     renderUserList();
   }
 
@@ -1474,8 +1577,10 @@
     tbody.innerHTML = '';
 
     usersList.forEach(u => {
+      const avatarSrc = u.avatar || DEFAULT_AVATAR;
       const tr = document.createElement('tr');
       tr.innerHTML = `
+        <td style="text-align:center;"><img src="${avatarSrc}" class="table-avatar" alt="Avatar"></td>
         <td><strong>${u.name}</strong></td>
         <td>${u.email}</td>
         <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b91c1c;">${u.pass}</code></td>
@@ -1496,14 +1601,17 @@
     const name = document.getElementById('newUserName').value.trim();
     const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
     const pass = document.getElementById('newUserPass').value.trim();
+    const avatar = document.getElementById('newUserAvatarBase64').value || '';
 
     if (usersList.some(u => u.email.toLowerCase() === email)) {
       alert('এই ইমেইলে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে!');
       return;
     }
 
-    usersRef.push({ name, email, pass, isSuper: false });
+    usersRef.push({ name, email, pass, avatar, isSuper: false });
     document.getElementById('addUserForm').reset();
+    document.getElementById('newUserAvatarPreview').src = DEFAULT_AVATAR;
+    document.getElementById('newUserAvatarBase64').value = '';
     alert('নতুন ইউজার সফলভাবে যুক্ত করা হয়েছে!');
   });
 
@@ -1515,6 +1623,9 @@
     document.getElementById('editUserName').value = target.name;
     document.getElementById('editUserEmail').value = target.email;
     document.getElementById('editUserPass').value = target.pass;
+    document.getElementById('editUserAvatarPreview').src = target.avatar || DEFAULT_AVATAR;
+    document.getElementById('editUserAvatarBase64').value = target.avatar || '';
+    document.getElementById('editUserAvatarFile').value = '';
 
     document.getElementById('editUserModal').style.display = 'flex';
   }
@@ -1529,11 +1640,15 @@
     const name = document.getElementById('editUserName').value.trim();
     const email = document.getElementById('editUserEmail').value.trim().toLowerCase();
     const pass = document.getElementById('editUserPass').value.trim();
+    const avatar = document.getElementById('editUserAvatarBase64').value;
 
-    usersRef.child(id).update({ name, email, pass }, (err) => {
+    const updates = { name, email, pass };
+    if (avatar !== undefined) updates.avatar = avatar;
+
+    usersRef.child(id).update(updates, (err) => {
       if (!err) {
         closeEditUserModal();
-        alert('ইউজারের তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!');
+        alert('ইউজারের তথ্য ও ছবি সফলভাবে আপডেট হয়েছে!');
       }
     });
   });
@@ -1553,6 +1668,9 @@
     document.getElementById('profileEmail').value = sessionUser.email;
     document.getElementById('profileOldPass').value = '';
     document.getElementById('profileNewPass').value = '';
+    document.getElementById('myAvatarPreview').src = sessionUser.avatar || DEFAULT_AVATAR;
+    document.getElementById('myAvatarBase64').value = sessionUser.avatar || '';
+    document.getElementById('myAvatarFile').value = '';
 
     document.getElementById('profileModal').style.display = 'flex';
   }
@@ -1577,14 +1695,18 @@
     const newName = document.getElementById('profileName').value.trim();
     const newEmail = document.getElementById('profileEmail').value.trim().toLowerCase();
     const newPass = document.getElementById('profileNewPass').value.trim();
+    const newAvatar = document.getElementById('myAvatarBase64').value;
 
     const updates = { name: newName, email: newEmail };
     if (newPass !== '') updates.pass = newPass;
+    if (newAvatar !== undefined) updates.avatar = newAvatar;
 
     usersRef.child(currentUser.id).update(updates, (err) => {
       if (!err) {
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...currentUser, ...updates }));
-        alert('আপনার প্রোফাইল তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
+        const updatedUser = { ...currentUser, ...updates };
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(updatedUser));
+        document.getElementById('headerUserAvatar').src = updatedUser.avatar || DEFAULT_AVATAR;
+        alert('আপনার প্রোফাইল তথ্য ও ছবি সফলভাবে আপডেট করা হয়েছে!');
         closeProfileModal();
         checkAuth();
       }
