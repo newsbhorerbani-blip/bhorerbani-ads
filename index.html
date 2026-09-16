@@ -756,7 +756,7 @@
 <div id="login-screen">
   <div class="login-card">
     <img src="logo.svg" alt="ভোরের বাণী" class="login-logo" onerror="this.src='https://placehold.co/240x60/b91c1c/ffffff?text=ভোরের+বাণী'">
-    <h2>অ্যাডমিন ও বিলিং লগইন</h2>
+    <h2>অ্যাডমিন লগইন</h2>
     <p>নিরাপদ সিস্টেমে প্রবেশ করতে ইমেইল ও পাসওয়ার্ড দিন</p>
     
     <form id="loginForm">
@@ -787,7 +787,7 @@
       </div>
     </div>
     <div class="header-actions">
-      <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;">👥 ইউজার ম্যানেজমেন্ট</button>
+      <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;"> ইউজার ম্যানেজমেন্ট</button>
       <button onclick="openProfileModal()">👤 আমার প্রোফাইল</button>
       <button class="btn-logout" onclick="logout()">লগআউট</button>
     </div>
@@ -817,7 +817,7 @@
   <div class="income-split-grid">
     <div class="income-box offline-income-card">
       <div class="income-box-header">
-        <h3>📰 অফলাইন বিজ্ঞাপন হিসাব (Print Income)</h3>
+        <h3>📰 অফলাইন বিজ্ঞাপন হিসাব</h3>
         <span style="font-size: 12px; background: #e2e8f0; padding: 2px 8px; border-radius: 12px; font-weight: bold;" id="offline-ad-count">0 টি বিজ্ঞাপন</span>
       </div>
       <div class="income-details-grid">
@@ -838,7 +838,7 @@
 
     <div class="income-box online-income-card">
       <div class="income-box-header">
-        <h3 style="color: #991b1b;">🌐 অনলাইন বিজ্ঞাপন হিসাব (Online Income)</h3>
+        <h3 style="color: #991b1b;">🌐 অনলাইন বিজ্ঞাপন হিসাব</h3>
         <span style="font-size: 12px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 12px; font-weight: bold;" id="online-ad-count">0 টি বিজ্ঞাপন</span>
       </div>
       <div class="income-details-grid">
@@ -860,20 +860,20 @@
 
   <div class="main-grid">
     <div class="card">
-      <h3 id="form-title">বিজ্ঞাপন বিলিং এন্ট্রি ফর্ম</h3>
+      <h3 id="form-title">বিজ্ঞাপন বিলিং ফর্ম</h3>
       <form id="adForm">
         <input type="hidden" id="edit-id">
 
         <div class="mode-selector-box">
-          <label class="title">✨ বিজ্ঞাপনের ধরন নির্বাচন করুন (AD TYPE):</label>
+          <label class="title"> বিজ্ঞাপনের ধরন নির্বাচন করুন (AD TYPE):</label>
           <div class="mode-options">
             <label class="mode-option-label">
               <input type="radio" name="adMode" value="offline" checked onchange="handleModeChange()">
-              📰 প্রিন্ট পত্রিকা (১৫% ভ্যাট)
+              📰 প্রিন্ট পত্রিকা
             </label>
             <label class="mode-option-label">
               <input type="radio" name="adMode" value="online" onchange="handleModeChange()">
-              🌐 অনলাইন পোর্টাল (ভ্যাট ০%)
+              🌐 অনলাইন পোর্টাল
             </label>
           </div>
         </div>
@@ -903,7 +903,7 @@
         <div id="offlineFormSection">
           <div class="row">
             <div class="form-group" style="flex: 1.3;">
-              <label>স্মারক নং (Memo / Ref No)</label>
+              <label>স্মারক নং </label>
               <input type="text" id="memoNo" placeholder="উদা: স্মারক নং-০৫.১০...">
             </div>
             <div class="form-group" style="flex: 1;">
@@ -915,11 +915,11 @@
           <div class="row">
             <div class="form-group" style="flex: 1;">
               <label>পত্রিকার বয়স (বছর)</label>
-              <input type="text" id="paperAge" placeholder="উদা: ১২ বছর">
+              <input type="text" id="paperAge" placeholder="উদা: ১২">
             </div>
             <div class="form-group" style="flex: 1;">
               <label>পত্রিকার সংখ্যা (ইস্যু নং)</label>
-              <input type="text" id="paperIssue" placeholder="উদা: বর্ষ ১২, সংখ্যা ৪৫">
+              <input type="text" id="paperIssue" placeholder="উদা: ৪৫">
             </div>
           </div>
 
@@ -964,32 +964,32 @@
                 <option value="In-Video Overlay Banner" data-web="468px * 60px" data-mob="320px * 50px" data-rate="3000">In-Video Overlay (ভিডিওর নিচে ভাসমান ব্যানার) - ৳ ৩,০০০</option>
               </optgroup>
 
-              <optgroup label="🌟 সুপার প্রিমিয়াম (Super Premium - ৳ 3,000/মাস)">
+              <optgroup label="সুপার প্রিমিয়াম (Super Premium - ৳ 3,000/মাস)">
                 <option value="Home BB Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
                 <option value="Article Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
                 <option value="Home BB Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
                 <option value="Article Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
               </optgroup>
 
-              <optgroup label="⚡ স্ট্যান্ডার্ড স্লট (Standard - ৳ 2,500/মাস)">
+              <optgroup label="স্ট্যান্ডার্ড স্লট (Standard - ৳ 2,500/মাস)">
                 <option value="Home BB-W-01" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-01 (Web: 970x250 | Mob: 300x250) - ৳ 2,500</option>
                 <option value="Home BB-W-02" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-02 (Web: 970x250 | Mob: 300x250) - ৳ 2,500</option>
                 <option value="Article Body W-1 / W-2" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2500">Article Body Banner (Web: 720x90 | Mob: 300x250) - ৳ 2,500</option>
               </optgroup>
 
-              <optgroup label="🔷 রেগুলার স্লট (Regular - ৳ 2,000/মাস)">
+              <optgroup label="রেগুলার স্লট (Regular - ৳ 2,000/মাস)">
                 <option value="Home BB-W-03 / W-04" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2000">Home BB-W-03 / W-04 (Web: 970x250 | Mob: 300x250) - ৳ 2,000</option>
                 <option value="Article W-3" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2000">Article W-3 Bottom (Web: 720x90 | Mob: 300x250) - ৳ 2,000</option>
                 <option value="Article Sidebar BB_WM" data-web="300px * 250px" data-mob="300px * 250px" data-rate="2000">Article Sidebar BB_WM (300x250) - ৳ 2,000</option>
               </optgroup>
 
-              <optgroup label="🔸 প্রিমিয়াম ও স্পেশাল">
+              <optgroup label="প্রিমিয়াম ও স্পেশাল">
                 <option value="Sidebar Mini BB_S_WM" data-web="300px * 100px" data-mob="300px * 100px" data-rate="1500">Sidebar Mini Banner (Web & Mob: 300x100) - ৳ 1,500</option>
                 <option value="Sidebar Mid Banner" data-web="300px * 140px" data-mob="300px * 100px" data-rate="1500">Sidebar Mid Banner (Web: 300x140 | Mob: 300x100) - ৳ 1,500</option>
                 <option value="Photo Overlay Ad" data-web="720px * 90px" data-mob="300px * 100px" data-rate="1500">Photo Overlay Banner (Web: 720x90) - ৳ 1,500</option>
               </optgroup>
 
-              <optgroup label="📢 ফেসবুক ফটোকার্ড">
+              <optgroup label="ফেসবুক ফটোকার্ড">
                 <option value="Facebook News Photocard (১০০টি)" data-web="1000px * 100px" data-mob="1000px * 100px" data-rate="65000">ফেসবুক নিউজ ফটোকার্ড (১০০টি ফটোকার্ড স্পন্সর) - ৳ ৬৫,০০০</option>
               </optgroup>
 
@@ -1095,7 +1095,7 @@
 <div class="modal-backdrop" id="userModal">
   <div class="modal-box">
     <div class="modal-header">
-      <h3 style="margin:0; font-size:16px;">👥 সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
+      <h3 style="margin:0; font-size:16px;"> সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
       <button class="close-btn" onclick="closeUserModal()">&times;</button>
     </div>
     
@@ -1103,7 +1103,7 @@
       <div class="row">
         <div class="form-group" style="flex:1;">
           <label>ব্যবহারকারীর নাম</label>
-          <input type="text" id="newUserName" required placeholder="উদা: ম্যানেজার">
+          <input type="text" id="newUserName" required placeholder="উদা: ভোরের বানী ">
         </div>
         <div class="form-group" style="flex:1;">
           <label>ইমেইল অ্যাড্রেস</label>
@@ -1195,8 +1195,8 @@
       <div class="inv-header">
         <div>
           <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
-          <p>জাতীয় দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
-          <p>হেড অফিস: ঢাকা, বাংলাদেশ | ফোন: +৮৮০ ২-৯৮৭৬৫৪৩</p>
+          <p>দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
+          <p>হেড অফিস: ২৩৮, শিরীণ পয়েন্ট, মডেল স্কুল রোড, গোপালগঞ্জ - ৮১০০ |<br> ফোন: +৮৮০ ১৭৫০৯৪১৯৪০</p>
         </div>
         <div style="text-align: right;">
           <h2 style="font-size: 18px; text-transform: uppercase; margin:0;">বিজ্ঞাপন বিল ও ভ্যাট চালান</h2>
@@ -1274,7 +1274,7 @@
 
     <div class="inv-signatures">
       <div class="signature-block">
-        সম্পাদক / বিজ্ঞাপন বিভাগ
+        সম্পাদক ভোরের বানী
       </div>
     </div>
   </div>
