@@ -4,27 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ভোরের বাণী - বিজ্ঞাপন বিলিং ও হিসাব রেজিস্টার</title>
-  <!-- Firebase SDK স্ক্রিপ্ট -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Firebase App & Realtime Database SDKs (Compat Version) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-<script>
-  // ধাপ ১ থেকে পাওয়া আপনার নিজস্ব Firebase কনফিগ এখানে বসান
-  const firebaseConfig = {
-  apiKey: "AIzaSyAikR4KcImPRFbb4XIcg5jSgkaVoSNZMDQ",
-  authDomain: "bhorerbani-ads.firebaseapp.com",
-  databaseURL: "https://bhorerbani-ads-default-rtdb.firebaseio.com",
-  projectId: "bhorerbani-ads",
-  storageBucket: "bhorerbani-ads.firebasestorage.app",
-  messagingSenderId: "388686180071",
-  appId: "1:388686180071:web:57c9bf37abf8a4e60bbc42",
-  measurementId: "G-EDV5B8M4ZF"
-};
-
-  // ফায়ারবেস ইনিশিয়ালাইজ
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-</script>
   <style>
     :root {
       --primary: #0f172a;
@@ -213,7 +197,7 @@
     .text-blue { color: var(--accent); }
     .text-orange { color: var(--warning); }
 
-    /* অফলাইন ও অনলাইন আয়ের বক্স */
+    /* অফলাইন ও অনলাইন আয়ের বক্স */
     .income-split-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -582,7 +566,7 @@
       color: #64748b;
     }
 
-    /* =================== প্রিন্ট স্টাইলিং =================== */
+    /* প্রিন্ট স্টাইলিং */
     #print-invoice-area, #print-summary-area {
       display: none;
     }
@@ -704,7 +688,7 @@
       .stamp-delivered {
         color: #16a34a !important;
         border: 4px solid #16a34a !important;
-        background: rgba(22, 163, 74, 0.05);
+        background: rgba(220, 38, 38, 0.05);
       }
 
       .inv-summary { width: 360px; }
@@ -773,7 +757,7 @@
   <div class="login-card">
     <img src="logo.svg" alt="ভোরের বাণী" class="login-logo" onerror="this.src='https://placehold.co/240x60/b91c1c/ffffff?text=ভোরের+বাণী'">
     <h2>অ্যাডমিন ও বিলিং লগইন</h2>
-    <p>নিরাপদ সিস্টেমে প্রবেশ করতে ইমেইল ও পাসওয়ার্ড দিন</p>
+    <p>নিরাপদ সিস্টেমে প্রবেশ করতে ইমেইল ও পাসওয়ার্ড দিন</p>
     
     <form id="loginForm">
       <div class="form-group">
@@ -781,13 +765,13 @@
         <input type="email" id="loginEmail" required placeholder="admin@bhorerbani.com">
       </div>
       <div class="form-group">
-        <label>গোপন পাসওয়ার্ড</label>
+        <label>গোপন পাসওয়ার্ড</label>
         <input type="password" id="loginPassword" required placeholder="••••••••">
       </div>
       <button type="submit" class="btn-login">লগইন করুন</button>
     </form>
     <div style="font-size: 11px; color: #94a3b8; margin-top: 15px;">
-      ডিফল্ট অ্যাডমিন: admin@bhorerbani.com | পাসওয়ার্ড: admin123
+      ডিফল্ট অ্যাডমিন: admin@bhorerbani.com | পাসওয়ার্ড: admin123
     </div>
   </div>
 </div>
@@ -812,11 +796,11 @@
   <!-- মেট্রিক্স সারাংশ -->
   <div class="metrics-grid">
     <div class="stat-card">
-      <p>সর্বমোট আদায়কৃত আয় (Paid)</p>
+      <p>সর্বমোট আদায়কৃত আয় (Paid)</p>
       <h2 class="text-green" id="stat-paid">৳ 0</h2>
     </div>
     <div class="stat-card">
-      <p>সর্বমোট বকেয়া (Due)</p>
+      <p>সর্বমোট বকেয়া (Due)</p>
       <h2 class="text-red" id="stat-due">৳ 0</h2>
     </div>
     <div class="stat-card">
@@ -824,12 +808,12 @@
       <h2 class="text-blue" id="stat-total">৳ 0</h2>
     </div>
     <div class="stat-card">
-      <p>প্রক্রিয়াধীন বিল (In Process)</p>
+      <p>প্রক্রিয়াধীন বিল (In Process)</p>
       <h2 class="text-orange" id="stat-process">0 টি</h2>
     </div>
   </div>
 
-  <!-- অফলাইন ও অনলাইন আয়ের আলাদা ২টি বক্স -->
+  <!-- অফলাইন ও অনলাইন আয়ের আলাদা ২টি বক্স -->
   <div class="income-split-grid">
     <div class="income-box offline-income-card">
       <div class="income-box-header">
@@ -838,11 +822,11 @@
       </div>
       <div class="income-details-grid">
         <div class="income-mini-stat">
-          <font>মোট আদায় (Paid)</font>
+          <font>মোট আদায় (Paid)</font>
           <strong class="text-green" id="offline-stat-paid">৳ 0</strong>
         </div>
         <div class="income-mini-stat">
-          <font>মোট বকেয়া (Due)</font>
+          <font>মোট বকেয়া (Due)</font>
           <strong class="text-red" id="offline-stat-due">৳ 0</strong>
         </div>
         <div class="income-mini-stat">
@@ -859,11 +843,11 @@
       </div>
       <div class="income-details-grid">
         <div class="income-mini-stat">
-          <font>মোট আদায় (Paid)</font>
+          <font>মোট আদায় (Paid)</font>
           <strong class="text-green" id="online-stat-paid">৳ 0</strong>
         </div>
         <div class="income-mini-stat">
-          <font>মোট বকেয়া (Due)</font>
+          <font>মোট বকেয়া (Due)</font>
           <strong class="text-red" id="online-stat-due">৳ 0</strong>
         </div>
         <div class="income-mini-stat">
@@ -907,7 +891,7 @@
 
         <div class="form-group">
           <label>প্রতিষ্ঠানের নাম (Client / Org)</label>
-          <input type="text" id="clientName" required placeholder="উদা: ওয়ালটন / জেলা প্রশাসন">
+          <input type="text" id="clientName" required placeholder="উদা: ওয়ালটন / জেলা প্রশাসন">
         </div>
 
         <div class="form-group">
@@ -930,7 +914,7 @@
 
           <div class="row">
             <div class="form-group" style="flex: 1;">
-              <label>পত্রিকার বয়স (বছর)</label>
+              <label>পত্রিকার বয়স (বছর)</label>
               <input type="text" id="paperAge" placeholder="উদা: ১২ বছর">
             </div>
             <div class="form-group" style="flex: 1;">
@@ -980,33 +964,33 @@
                 <option value="In-Video Overlay Banner" data-web="468px * 60px" data-mob="320px * 50px" data-rate="3000">In-Video Overlay (ভিডিওর নিচে ভাসমান ব্যানার) - ৳ ৩,০০০</option>
               </optgroup>
 
-              <optgroup label="🌟 সুপার প্রিমিয়াম (Super Premium - ৳ 3,000/মাস)">
-                <option value="Home BB Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
-                <option value="Article Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
-                <option value="Home BB Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
-                <option value="Article Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
+              <optgroup label="🌟 সুপার প্রিমিয়াম (Super Premium - ৳ 3,000/মাস)">
+                <option value="Home BB Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
+                <option value="Article Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
+                <option value="Home BB Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
+                <option value="Article Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000</option>
               </optgroup>
 
               <optgroup label="⚡ স্ট্যান্ডার্ড স্লট (Standard - ৳ 2,500/মাস)">
-                <option value="Home BB-W-01" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-01 (Web: 970x250 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
-                <option value="Home BB-W-02" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-02 (Web: 970x250 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
-                <option value="Article Body W-1 / W-2" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2500">Article Body Banner (Web: 720x90 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
+                <option value="Home BB-W-01" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-01 (Web: 970x250 | Mob: 300x250) - ৳ 2,500</option>
+                <option value="Home BB-W-02" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-02 (Web: 970x250 | Mob: 300x250) - ৳ 2,500</option>
+                <option value="Article Body W-1 / W-2" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2500">Article Body Banner (Web: 720x90 | Mob: 300x250) - ৳ 2,500</option>
               </optgroup>
 
               <optgroup label="🔷 রেগুলার স্লট (Regular - ৳ 2,000/মাস)">
-                <option value="Home BB-W-03 / W-04" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2000">Home BB-W-03 / W-04 (Web: 970x250 | Mob: 300x250) - ৳ 2,000[cite: 1]</option>
-                <option value="Article W-3" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2000">Article W-3 Bottom (Web: 720x90 | Mob: 300x250) - ৳ 2,000[cite: 1]</option>
-                <option value="Article Sidebar BB_WM" data-web="300px * 250px" data-mob="300px * 250px" data-rate="2000">Article Sidebar BB_WM (300x250) - ৳ 2,000[cite: 1]</option>
+                <option value="Home BB-W-03 / W-04" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2000">Home BB-W-03 / W-04 (Web: 970x250 | Mob: 300x250) - ৳ 2,000</option>
+                <option value="Article W-3" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2000">Article W-3 Bottom (Web: 720x90 | Mob: 300x250) - ৳ 2,000</option>
+                <option value="Article Sidebar BB_WM" data-web="300px * 250px" data-mob="300px * 250px" data-rate="2000">Article Sidebar BB_WM (300x250) - ৳ 2,000</option>
               </optgroup>
 
-              <optgroup label="🔸 প্রিমিয়াম ও স্পেশাল">
-                <option value="Sidebar Mini BB_S_WM" data-web="300px * 100px" data-mob="300px * 100px" data-rate="1500">Sidebar Mini Banner (Web & Mob: 300x100) - ৳ 1,500[cite: 1]</option>
-                <option value="Sidebar Mid Banner" data-web="300px * 140px" data-mob="300px * 100px" data-rate="1500">Sidebar Mid Banner (Web: 300x140 | Mob: 300x100) - ৳ 1,500[cite: 1]</option>
-                <option value="Photo Overlay Ad" data-web="720px * 90px" data-mob="300px * 100px" data-rate="1500">Photo Overlay Banner (Web: 720x90) - ৳ 1,500[cite: 1]</option>
+              <optgroup label="🔸 প্রিমিয়াম ও স্পেশাল">
+                <option value="Sidebar Mini BB_S_WM" data-web="300px * 100px" data-mob="300px * 100px" data-rate="1500">Sidebar Mini Banner (Web & Mob: 300x100) - ৳ 1,500</option>
+                <option value="Sidebar Mid Banner" data-web="300px * 140px" data-mob="300px * 100px" data-rate="1500">Sidebar Mid Banner (Web: 300x140 | Mob: 300x100) - ৳ 1,500</option>
+                <option value="Photo Overlay Ad" data-web="720px * 90px" data-mob="300px * 100px" data-rate="1500">Photo Overlay Banner (Web: 720x90) - ৳ 1,500</option>
               </optgroup>
 
               <optgroup label="📢 ফেসবুক ফটোকার্ড">
-                <option value="Facebook News Photocard (১০০টি)" data-web="1000px * 100px" data-mob="1000px * 100px" data-rate="65000">ফেসবুক নিউজ ফটোকার্ড (১০০টি ফটোকার্ড স্পন্সর) - ৳ ৬৫,০০০[cite: 1]</option>
+                <option value="Facebook News Photocard (১০০টি)" data-web="1000px * 100px" data-mob="1000px * 100px" data-rate="65000">ফেসবুক নিউজ ফটোকার্ড (১০০টি ফটোকার্ড স্পন্সর) - ৳ ৬৫,০০০</option>
               </optgroup>
 
               <optgroup label="কাস্টম স্লট">
@@ -1030,7 +1014,7 @@
           </div>
 
           <div class="form-group">
-            <label>চুক্তি অনুযায়ী মোট মূল্য (৳)</label>
+            <label>চুক্তি অনুযায়ী মোট মূল্য (৳)</label>
             <input type="number" step="any" id="onlineBasePrice" placeholder="0" oninput="calculateBill()">
           </div>
         </div>
@@ -1039,8 +1023,8 @@
         <div class="form-group">
           <label>পেমেন্ট স্ট্যাটাস (Payment Status)</label>
           <select id="status" onchange="togglePaidInput()">
-            <option value="unpaid/due">Unpaid / Due (বকেয়া)</option>
-            <option value="on process">On Process (প্রক্রিয়াধীন)</option>
+            <option value="unpaid/due">Unpaid / Due (বকেয়া)</option>
+            <option value="on process">On Process (প্রক্রিয়াধীন)</option>
             <option value="paid">Paid (পরিশোধিত)</option>
           </select>
         </div>
@@ -1052,10 +1036,10 @@
 
         <div class="calc-summary">
           <div id="measuringSummaryLine">মোট পরিমাপ: <strong><span id="preview-col-inch">0</span> কলাম ইঞ্চি</strong></div>
-          <div>মূল্য (ভ্যাট ছাড়া): <strong>৳ <span id="preview-base-price">0.00</span></strong></div>
+          <div>মূল্য (ভ্যাট ছাড়া): <strong>৳ <span id="preview-base-price">0.00</span></strong></div>
           <div>ভ্যাট / ট্যাক্স: <strong>৳ <span id="preview-vat">0.00</span></strong> <small id="preview-vat-rate" style="color:#64748b;">(১৫%)</small></div>
           <div style="font-size:13px; color:#1e40af;">সর্বমোট বিল: <strong>৳ <span id="preview-total-bill">0.00</span></strong></div>
-          <div style="color:#dc2626;">বকেয়া (Due): <strong>৳ <span id="preview-due">0.00</span></strong></div>
+          <div style="color:#dc2626;">বকেয়া (Due): <strong>৳ <span id="preview-due">0.00</span></strong></div>
         </div>
 
         <button type="submit" class="btn btn-save" id="save-btn">বিল সংরক্ষণ করুন</button>
@@ -1075,14 +1059,14 @@
         </div>
         <button class="btn-date-filter" onclick="applyDateFilter()">🔍 ফিল্টার</button>
         <button class="btn-date-clear" onclick="clearDateFilter()">রিসেট</button>
-        <button class="btn-summary-print" onclick="printDateRangeSummary()">📊 নির্দিষ্ট সময়ের সামারি প্রিন্ট</button>
+        <button class="btn-summary-print" onclick="printDateRangeSummary()">📊 নির্দিষ্ট সময়ের সামারি প্রিন্ট</button>
       </div>
 
       <div class="filter-tabs">
         <button class="tab-btn active" onclick="setFilter('all', this)">সকল বিজ্ঞাপন</button>
         <button class="tab-btn" onclick="setFilter('paid', this)">✅ পরিশোধিত (Paid)</button>
-        <button class="tab-btn" onclick="setFilter('unpaid/due', this)">❌ বকেয়া (Unpaid)</button>
-        <button class="tab-btn" onclick="setFilter('on process', this)">⏳ প্রক্রিয়াধীন (On Process)</button>
+        <button class="tab-btn" onclick="setFilter('unpaid/due', this)">❌ বকেয়া (Unpaid)</button>
+        <button class="tab-btn" onclick="setFilter('on process', this)">⏳ প্রক্রিয়াধীন (On Process)</button>
       </div>
 
       <div class="table-container">
@@ -1094,7 +1078,7 @@
               <th>প্রতিষ্ঠান ও মাধ্যম</th>
               <th>মাপ / স্লট (Web & Phone View)</th>
               <th>মূল্য ও ভ্যাট</th>
-              <th>মোট ও বকেয়া</th>
+              <th>মোট ও বকেয়া</th>
               <th>পেমেন্ট স্ট্যাটাস</th>
               <th>অ্যাকশন</th>
             </tr>
@@ -1107,11 +1091,11 @@
   </div>
 </div>
 
-<!-- =================== ৩. ইউজার ম্যানেজমেন্ট মডাল (শুধুমাত্র অ্যাডমিনের জন্য) =================== -->
+<!-- ইউজার ম্যানেজমেন্ট মডাল -->
 <div class="modal-backdrop" id="userModal">
   <div class="modal-box">
     <div class="modal-header">
-      <h3 style="margin:0; font-size:16px;">👥 সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
+      <h3 style="margin:0; font-size:16px;">👥 সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
       <button class="close-btn" onclick="closeUserModal()">&times;</button>
     </div>
     
@@ -1127,8 +1111,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label>পাসওয়ার্ড</label>
-        <input type="text" id="newUserPass" required placeholder="পাসওয়ার্ড লিখুন">
+        <label>পাসওয়ার্ড</label>
+        <input type="text" id="newUserPass" required placeholder="পাসওয়ার্ড লিখুন">
       </div>
       <button type="submit" class="btn btn-save" style="margin-top:4px;">নতুন ইউজার যুক্ত করুন</button>
     </form>
@@ -1139,7 +1123,7 @@
           <tr>
             <th>নাম</th>
             <th>ইমেইল</th>
-            <th>পাসওয়ার্ড</th>
+            <th>পাসওয়ার্ড</th>
             <th>অ্যাকশন</th>
           </tr>
         </thead>
@@ -1149,7 +1133,7 @@
   </div>
 </div>
 
-<!-- অ্যাডমিন দ্বারা ইউজারের ডাটা সরাসরি এডিট করার মিনি মডাল -->
+<!-- ইউজার এডিট মিনি মডাল -->
 <div class="modal-backdrop" id="editUserModal" style="z-index: 10001;">
   <div class="modal-box" style="max-width: 400px;">
     <div class="modal-header">
@@ -1167,7 +1151,7 @@
         <input type="email" id="editUserEmail" required>
       </div>
       <div class="form-group">
-        <label>পাসওয়ার্ড (সরাসরি দৃশ্যমান)</label>
+        <label>পাসওয়ার্ড (সরাসরি দৃশ্যমান)</label>
         <input type="text" id="editUserPass" required>
       </div>
       <button type="submit" class="btn btn-save">আপডেট করুন</button>
@@ -1175,11 +1159,11 @@
   </div>
 </div>
 
-<!-- =================== ৪. নিজস্ব প্রোফাইল এডিট মডাল =================== -->
+<!-- নিজস্ব প্রোফাইল এডিট মডাল -->
 <div class="modal-backdrop" id="profileModal">
   <div class="modal-box" style="max-width: 380px;">
     <div class="modal-header">
-      <h3 style="margin:0; font-size:16px;">👤 আমার প্রোফাইল ও পাসওয়ার্ড পরিবর্তন</h3>
+      <h3 style="margin:0; font-size:16px;">👤 আমার প্রোফাইল ও পাসওয়ার্ড পরিবর্তন</h3>
       <button class="close-btn" onclick="closeProfileModal()">&times;</button>
     </div>
     <form id="profileEditForm">
@@ -1192,26 +1176,26 @@
         <input type="email" id="profileEmail" required>
       </div>
       <div class="form-group">
-        <label>বর্তমান পাসওয়ার্ড</label>
-        <input type="password" id="profileOldPass" required placeholder="যাচাইয়ের জন্য দিন">
+        <label>বর্তমান পাসওয়ার্ড</label>
+        <input type="password" id="profileOldPass" required placeholder="যাচাইয়ের জন্য দিন">
       </div>
       <div class="form-group">
-        <label>নতুন পাসওয়ার্ড (পরিবর্তন করতে চাইলে লিখুন)</label>
-        <input type="text" id="profileNewPass" placeholder="নতুন পাসওয়ার্ড">
+        <label>নতুন পাসওয়ার্ড (পরিবর্তন করতে চাইলে লিখুন)</label>
+        <input type="text" id="profileNewPass" placeholder="নতুন পাসওয়ার্ড">
       </div>
       <button type="submit" class="btn btn-save">প্রোফাইল সংরক্ষণ করুন</button>
     </form>
   </div>
 </div>
 
-<!-- =================== ৫. অফিশিয়াল A4 ইনভয়েস পেজ =================== -->
+<!-- অফিশিয়াল A4 ইনভয়েস পেজ -->
 <div id="print-invoice-area">
   <div class="a4-page">
     <div>
       <div class="inv-header">
         <div>
           <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
-          <p>জাতীয় দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
+          <p>জাতীয় দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
           <p>হেড অফিস: ঢাকা, বাংলাদেশ | ফোন: +৮৮০ ২-৯৮৭৬৫৪৩</p>
         </div>
         <div style="text-align: right;">
@@ -1231,7 +1215,7 @@
         </div>
         <div style="flex: 0.8; text-align: right;">
           <p style="font-size: 11px; text-transform: uppercase; color: #555;">প্রকাশনা তথ্য:</p>
-          <p id="inv-paper-age-line">পত্রিকার বয়স: <strong id="inv-paper-age"></strong></p>
+          <p id="inv-paper-age-line">পত্রিকার বয়স: <strong id="inv-paper-age"></strong></p>
           <p id="inv-paper-issue-line">সংখ্যা / ইস্যু: <strong id="inv-paper-issue"></strong></p>
           <p>পেমেন্ট অবস্থা: <strong id="inv-status"></strong></p>
         </div>
@@ -1296,12 +1280,12 @@
   </div>
 </div>
 
-<!-- =================== ৬. আর্থিক সামারি রিপোর্ট পেজ =================== -->
+<!-- আর্থিক সামারি রিপোর্ট পেজ -->
 <div id="print-summary-area">
   <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
     <img src="logo.svg" alt="ভোরের বাণী" style="height:44px;" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'"><br>
-    <p style="margin: 4px 0 0 0; font-size: 13px;">বিজ্ঞাপন ও আয়-ব্যয় সামারি স্টেটমেন্ট (প্রিন্ট ও অনলাইন)</p>
-    <p style="margin: 3px 0 0 0; font-size: 12px; font-weight: bold;" id="summary-period-title">সময়কাল: সকল বিবরণী</p>
+    <p style="margin: 4px 0 0 0; font-size: 13px;">বিজ্ঞাপন ও আয়-ব্যয় সামারি স্টেটমেন্ট (প্রিন্ট ও অনলাইন)</p>
+    <p style="margin: 3px 0 0 0; font-size: 12px; font-weight: bold;" id="summary-period-title">সময়কাল: সকল বিবরণী</p>
   </div>
 
   <div class="summary-cards-print">
@@ -1314,11 +1298,11 @@
       <div style="font-size: 16px; font-weight: bold;" id="sum-total-bill">৳ 0</div>
     </div>
     <div class="summary-card-p">
-      <div style="font-size: 11px;">মোট আদায়কৃত জমা (Paid)</div>
+      <div style="font-size: 11px;">মোট আদায়কৃত জমা (Paid)</div>
       <div style="font-size: 16px; font-weight: bold; color: green;" id="sum-paid-bill">৳ 0</div>
     </div>
     <div class="summary-card-p">
-      <div style="font-size: 11px;">মোট বকেয়া (Due)</div>
+      <div style="font-size: 11px;">মোট বকেয়া (Due)</div>
       <div style="font-size: 16px; font-weight: bold; color: red;" id="sum-due-bill">৳ 0</div>
     </div>
   </div>
@@ -1334,7 +1318,7 @@
         <th style="text-align: right;">মূল্য</th>
         <th style="text-align: right;">মোট বিল</th>
         <th style="text-align: right;">জমা</th>
-        <th style="text-align: right;">বকেয়া</th>
+        <th style="text-align: right;">বকেয়া</th>
         <th style="text-align: center;">স্ট্যাটাস</th>
       </tr>
     </thead>
@@ -1349,51 +1333,76 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'newspaper_adv_tax_billing_v18_db';
-  const USERS_KEY = 'bhorerbani_users_v3_db';
+  // Firebase কনফিগারেশন
+  const firebaseConfig = {
+    apiKey: "AIzaSyAikR4KcImPRFbb4XIcg5jSgkaVoSNZMDQ",
+    authDomain: "bhorerbani-ads.firebaseapp.com",
+    databaseURL: "https://bhorerbani-ads-default-rtdb.firebaseio.com",
+    projectId: "bhorerbani-ads",
+    storageBucket: "bhorerbani-ads.firebasestorage.app",
+    messagingSenderId: "388686180071",
+    appId: "1:388686180071:web:57c9bf37abf8a4e60bbc42",
+    measurementId: "G-EDV5B8M4ZF"
+  };
+
+  // Firebase ইনিশিয়ালাইজেশন
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const adsRef = db.ref('advertisements');
+  const usersRef = db.ref('users');
+
   const SESSION_KEY = 'bhorerbani_active_session_v3';
 
   let currentFilter = 'all';
   let filterStartDate = '';
   let filterEndDate = '';
 
-  function getUsers() {
-    const data = localStorage.getItem(USERS_KEY);
-    if (!data) {
-      const initialUsers = [
-        { id: 1, name: "প্রধান অ্যাডমিন", email: "admin@bhorerbani.com", pass: "admin123", isSuper: true }
-      ];
-      localStorage.setItem(USERS_KEY, JSON.stringify(initialUsers));
-      return initialUsers;
-    }
-    return JSON.parse(data);
-  }
+  let adsList = [];
+  let usersList = [];
 
-  function saveUsers(users) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  }
+  // ফায়ারবেস থেকে রিয়েলটাইম ইউজার সিন্ক
+  usersRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      usersList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+    } else {
+      // ডিফল্ট অ্যাডমিন তৈরি
+      const initialAdmin = {
+        name: "প্রধান অ্যাডমিন",
+        email: "admin@bhorerbani.com",
+        pass: "admin123",
+        isSuper: true
+      };
+      usersRef.push(initialAdmin);
+    }
+    renderUserList();
+  });
+
+  // ফায়ারবেস থেকে রিয়েলটাইম বিজ্ঞাপন ডেটা সিন্ক
+  adsRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    adsList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : [];
+    renderDashboard();
+  });
 
   function getActiveSession() {
     const data = sessionStorage.getItem(SESSION_KEY);
     return data ? JSON.parse(data) : null;
   }
 
-  // বর্তমান লগইন করা ইউজারের পাসওয়ার্ড যাচাই করার সার্বজনীন সিকিউরিটি ফাংশন
   function verifyCurrentAccountPassword() {
     const sessionUser = getActiveSession();
     if (!sessionUser) return false;
 
-    const inputPass = prompt(`নিরাপত্তা যাচাই: "${sessionUser.name}" অ্যাকাউন্টের পাসওয়ার্ড লিখুন:`);
+    const inputPass = prompt(`নিরাপত্তা যাচাই: "${sessionUser.name}" অ্যাকাউন্টের পাসওয়ার্ড লিখুন:`);
     if (!inputPass) return false;
 
-    const users = getUsers();
-    const currentUser = users.find(u => u.id === sessionUser.id);
-
+    const currentUser = usersList.find(u => u.id === sessionUser.id || u.email === sessionUser.email);
     if (currentUser && currentUser.pass === inputPass) {
       return true;
     }
 
-    alert('ভুল পাসওয়ার্ড! তথ্য পরিবর্তন বা মুছে ফেলার অনুমতি নেই।');
+    alert('ভুল পাসওয়ার্ড! তথ্য পরিবর্তন বা মুছে ফেলার অনুমতি নেই।');
     return false;
   }
 
@@ -1403,14 +1412,13 @@
     const email = document.getElementById('loginEmail').value.trim().toLowerCase();
     const pass = document.getElementById('loginPassword').value;
 
-    const users = getUsers();
-    const found = users.find(u => u.email.toLowerCase() === email && u.pass === pass);
+    const found = usersList.find(u => u.email.toLowerCase() === email && u.pass === pass);
 
     if (found) {
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(found));
       checkAuth();
     } else {
-      alert('ভুল ইমেইল অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।');
+      alert('ভুল ইমেইল অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।');
     }
   });
 
@@ -1442,7 +1450,7 @@
     }
   }
 
-  // ইউজার ম্যানেজমেন্ট (অ্যাডমিন)
+  // ইউজার ম্যানেজমেন্ট
   function openUserModal() {
     const sessionUser = getActiveSession();
     if (!sessionUser || !sessionUser.isSuper) {
@@ -1458,11 +1466,11 @@
   }
 
   function renderUserList() {
-    const users = getUsers();
     const tbody = document.getElementById('userListTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
-    users.forEach(u => {
+    usersList.forEach(u => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td><strong>${u.name}</strong></td>
@@ -1471,8 +1479,8 @@
         <td>
           ${u.isSuper 
             ? '<span style="color:#16a34a; font-weight:bold;">Super Admin</span>' 
-            : `<button class="action-btn btn-edit" onclick="openEditUserModal(${u.id})">Edit</button>
-               <button class="action-btn btn-del" onclick="deleteUser(${u.id})">Remove</button>`
+            : `<button class="action-btn btn-edit" onclick="openEditUserModal('${u.id}')">Edit</button>
+               <button class="action-btn btn-del" onclick="deleteUser('${u.id}')">Remove</button>`
           }
         </td>
       `;
@@ -1486,22 +1494,18 @@
     const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
     const pass = document.getElementById('newUserPass').value.trim();
 
-    const users = getUsers();
-    if (users.some(u => u.email.toLowerCase() === email)) {
-      alert('এই ইমেইলে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে!');
+    if (usersList.some(u => u.email.toLowerCase() === email)) {
+      alert('এই ইমেইলে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে!');
       return;
     }
 
-    users.push({ id: Date.now(), name, email, pass, isSuper: false });
-    saveUsers(users);
+    usersRef.push({ name, email, pass, isSuper: false });
     document.getElementById('addUserForm').reset();
-    renderUserList();
-    alert('নতুন ইউজার সফলভাবে যুক্ত করা হয়েছে!');
+    alert('নতুন ইউজার সফলভাবে যুক্ত করা হয়েছে!');
   });
 
   function openEditUserModal(id) {
-    const users = getUsers();
-    const target = users.find(u => u.id === id);
+    const target = usersList.find(u => u.id === id);
     if (!target) return;
 
     document.getElementById('editUserTargetId').value = target.id;
@@ -1518,31 +1522,22 @@
 
   document.getElementById('editUserForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const id = Number(document.getElementById('editUserTargetId').value);
+    const id = document.getElementById('editUserTargetId').value;
     const name = document.getElementById('editUserName').value.trim();
     const email = document.getElementById('editUserEmail').value.trim().toLowerCase();
     const pass = document.getElementById('editUserPass').value.trim();
 
-    const users = getUsers();
-    const idx = users.findIndex(u => u.id === id);
-
-    if (idx !== -1) {
-      users[idx].name = name;
-      users[idx].email = email;
-      users[idx].pass = pass;
-      saveUsers(users);
-      renderUserList();
-      closeEditUserModal();
-      alert('ইউজারের তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!');
-    }
+    usersRef.child(id).update({ name, email, pass }, (err) => {
+      if (!err) {
+        closeEditUserModal();
+        alert('ইউজারের তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!');
+      }
+    });
   });
 
   function deleteUser(id) {
-    if (confirm('আপনি কি এই ইউজারকে স্থায়ীভাবে মুছে ফেলতে চান?')) {
-      let users = getUsers();
-      users = users.filter(u => u.id !== id);
-      saveUsers(users);
-      renderUserList();
+    if (confirm('আপনি কি এই ইউজারকে স্থায়ীভাবে মুছে ফেলতে চান?')) {
+      usersRef.child(id).remove();
     }
   }
 
@@ -1566,14 +1561,13 @@
   document.getElementById('profileEditForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const sessionUser = getActiveSession();
-    const users = getUsers();
-    const idx = users.findIndex(u => u.id === sessionUser.id);
+    const currentUser = usersList.find(u => u.id === sessionUser.id || u.email === sessionUser.email);
 
-    if (idx === -1) return;
+    if (!currentUser) return;
 
     const oldPassInput = document.getElementById('profileOldPass').value;
-    if (users[idx].pass !== oldPassInput) {
-      alert('ভুল বর্তমান পাসওয়ার্ড! নিরাপত্তা নিশ্চিত করতে সঠিক পাসওয়ার্ড দিন।');
+    if (currentUser.pass !== oldPassInput) {
+      alert('ভুল বর্তমান পাসওয়ার্ড! নিরাপত্তা নিশ্চিত করতে সঠিক পাসওয়ার্ড দিন।');
       return;
     }
 
@@ -1581,28 +1575,18 @@
     const newEmail = document.getElementById('profileEmail').value.trim().toLowerCase();
     const newPass = document.getElementById('profileNewPass').value.trim();
 
-    users[idx].name = newName;
-    users[idx].email = newEmail;
-    if (newPass !== '') {
-      users[idx].pass = newPass;
-    }
+    const updates = { name: newName, email: newEmail };
+    if (newPass !== '') updates.pass = newPass;
 
-    saveUsers(users);
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(users[idx]));
-    alert('আপনার প্রোফাইল তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
-    closeProfileModal();
-    checkAuth();
+    usersRef.child(currentUser.id).update(updates, (err) => {
+      if (!err) {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...currentUser, ...updates }));
+        alert('আপনার প্রোফাইল তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
+        closeProfileModal();
+        checkAuth();
+      }
+    });
   });
-
-  // বিজ্ঞাপন ডেটাবেস
-  function getAds() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
-  }
-
-  function saveAds(ads) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
-  }
 
   function getStatusClass(status) {
     if (status === 'paid') return 'status-paid';
@@ -1623,7 +1607,7 @@
       onlineSection.style.display = 'block';
       printDateWrapper.style.display = 'none';
       measuringLine.style.display = 'none';
-      vatRateLabel.innerText = "(০% - প্রযোজ্য নয়)";
+      vatRateLabel.innerText = "(০% - প্রযোজ্য নয়)";
       handleOnlineSlotChange();
     } else {
       offlineSection.style.display = 'block';
@@ -1689,7 +1673,6 @@
     }
 
     const totalWithVat = basePrice + vat;
-
     let paid = 0;
     let due = 0;
 
@@ -1736,8 +1719,8 @@
   }
 
   function renderDashboard() {
-    const ads = getAds();
     const tbody = document.getElementById('adListBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     let totalContractWithTax = 0;
@@ -1756,10 +1739,10 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    ads.forEach(ad => {
-      const contract = Number(ad.totalWithVat);
-      const paid = Number(ad.paidAmount);
-      const due = Number(ad.due);
+    adsList.forEach(ad => {
+      const contract = Number(ad.totalWithVat) || 0;
+      const paid = Number(ad.paidAmount) || 0;
+      const due = Number(ad.due) || 0;
 
       totalContractWithTax += contract;
       totalPaid += paid;
@@ -1793,7 +1776,7 @@
     document.getElementById('online-stat-due').innerText = `৳ ${onlineDue.toLocaleString()}`;
     document.getElementById('online-stat-total').innerText = `৳ ${onlineTotal.toLocaleString()}`;
 
-    const filteredAds = ads.filter(ad => {
+    const filteredAds = adsList.filter(ad => {
       const matchStatus = (currentFilter === 'all') || (ad.status === currentFilter);
       let matchDate = true;
       const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
@@ -1834,11 +1817,11 @@
         vatText = `<span style="font-size:11px; color:#64748b;">(ভ্যাট নেই)</span>`;
         dateDisplay = `
           শুরু: ${ad.onlineStartDate || '-'}<br>
-          <span style="color:${isExpired ? '#ef4444' : '#0284c7'}; font-weight:bold;">মেয়াদ শেষ: ${ad.onlineEndDate || '-'}</span>
+          <span style="color:${isExpired ? '#ef4444' : '#0284c7'}; font-weight:bold;">মেয়াদ শেষ: ${ad.onlineEndDate || '-'}</span>
         `;
       } else {
         dimensionText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি<br><strong style="color:#0284c7;">= ${ad.totalColInch} কলাম ইঞ্চি</strong>`;
-        vatText = `<span style="font-size:11px; color:#d97706;">+১৫% ভ্যাট: ৳${ad.vat.toLocaleString()}</span>`;
+        vatText = `<span style="font-size:11px; color:#d97706;">+১৫% ভ্যাট: ৳${Number(ad.vat || 0).toLocaleString()}</span>`;
         dateDisplay = `ছাপা: ${ad.printDate || '-'}`;
       }
 
@@ -1853,63 +1836,59 @@
         <td>
           <strong>${ad.clientName}</strong><br>
           <span style="font-size:11px; color:#0284c7;">মাধ্যম: ${ad.mediaSource || 'সরাসরি'}</span><br>
-          ${!isOnline ? `<span style="font-size:11px; color:#64748b;">স্মারক: ${ad.memoNo || 'প্রযোজ্য নয়'}</span>` : ''}
+          ${!isOnline ? `<span style="font-size:11px; color:#64748b;">স্মারক: ${ad.memoNo || 'প্রযোজ্য নয়'}</span>` : ''}
         </td>
         <td>${dimensionText}</td>
-        <td>মূল: ৳${ad.basePrice.toLocaleString()}<br>${vatText}</td>
+        <td>মূল: ৳${Number(ad.basePrice || 0).toLocaleString()}<br>${vatText}</td>
         <td>
-          মোট: ৳${ad.totalWithVat.toLocaleString()}<br>
+          মোট: ৳${Number(ad.totalWithVat || 0).toLocaleString()}<br>
           <span style="font-weight:bold; color:${ad.due > 0 ? '#dc2626' : '#16a34a'}; font-size:11px;">
-            বকেয়া: ৳${ad.due.toLocaleString()}
+            বকেয়া: ৳${Number(ad.due || 0).toLocaleString()}
           </span>
         </td>
         <td>
-          <select class="status-select ${getStatusClass(currentStatus)}" onchange="updateStatusDirectly(${ad.id}, this.value, this, '${currentStatus}')">
+          <select class="status-select ${getStatusClass(currentStatus)}" onchange="updateStatusDirectly('${ad.id}', this.value, this, '${currentStatus}')">
             <option value="paid" ${currentStatus === 'paid' ? 'selected' : ''}>Paid</option>
             <option value="on process" ${currentStatus === 'on process' ? 'selected' : ''}>On Process</option>
             <option value="unpaid/due" ${currentStatus === 'unpaid/due' ? 'selected' : ''}>Unpaid / Due</option>
           </select>
         </td>
         <td>
-          <button class="action-btn btn-print" onclick="printReceipt(${ad.id})" title="A4 ভ্যাট বিল প্রিন্ট">Print</button>
-          <button class="action-btn btn-edit" onclick="editAd(${ad.id})">Edit</button>
-          <button class="action-btn btn-del" onclick="deleteAd(${ad.id})">Delete</button>
+          <button class="action-btn btn-print" onclick="printReceipt('${ad.id}')" title="A4 ভ্যাট বিল প্রিন্ট">Print</button>
+          <button class="action-btn btn-edit" onclick="editAd('${ad.id}')">Edit</button>
+          <button class="action-btn btn-del" onclick="deleteAd('${ad.id}')">Delete</button>
         </td>
       `;
       tbody.appendChild(tr);
     });
   }
 
-  // সরাসরি ড্রপডাউন থেকে স্ট্যাটাস পরিবর্তন (লগইন করা ইউজারের পাসওয়ার্ড ভেরিফিকেশনসহ)
   function updateStatusDirectly(id, newStatus, selectElem, oldStatus) {
     if (!verifyCurrentAccountPassword()) {
       selectElem.value = oldStatus;
       return;
     }
-    const ads = getAds();
-    const idx = ads.findIndex(a => a.id == id);
-    if (idx !== -1) {
-      ads[idx].status = newStatus;
-      if (newStatus === 'paid') {
-        ads[idx].paidAmount = ads[idx].totalWithVat;
-        ads[idx].due = 0;
-      }
-      saveAds(ads);
-      renderDashboard();
+    const target = adsList.find(a => a.id === id);
+    if (!target) return;
+
+    const updates = { status: newStatus };
+    if (newStatus === 'paid') {
+      updates.paidAmount = target.totalWithVat;
+      updates.due = 0;
     }
+
+    adsRef.child(id).update(updates);
   }
 
-  // ফর্ম সাবমিট (নতুন যোগ বা এডিট সংরক্ষণ)
+  // বিল ফর্ম সংরক্ষণ
   document.getElementById('adForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const editId = document.getElementById('edit-id').value;
 
-    // এডিট মোডে থাকলে পাসওয়ার্ড যাচাই নিশ্চিত করা হবে
     if (editId && !verifyCurrentAccountPassword()) {
       return;
     }
 
-    const ads = getAds();
     const calc = calculateBill();
 
     const payload = {
@@ -1949,30 +1928,31 @@
     }
 
     if (payload.status !== 'paid' && payload.paidAmount > payload.totalWithVat) {
-      alert('জমার পরিমাণ মোট বিলের চেয়ে বেশি হতে পারবে না!');
+      alert('জমার পরিমাণ মোট বিলের চেয়ে বেশি হতে পারবে না!');
       return;
     }
 
     if (editId) {
-      const idx = ads.findIndex(a => a.id == editId);
-      if (idx !== -1) ads[idx] = { ...ads[idx], ...payload };
+      adsRef.child(editId).update(payload, (err) => {
+        if (!err) {
+          resetForm();
+          alert('বিজ্ঞাপনের হিসাব সফলভাবে আপডেট হয়েছে!');
+        }
+      });
     } else {
-      payload.id = Date.now();
-      ads.unshift(payload);
+      adsRef.push(payload, (err) => {
+        if (!err) {
+          resetForm();
+          alert('বিজ্ঞাপনের হিসাব সফলভাবে সংরক্ষিত হয়েছে!');
+        }
+      });
     }
-
-    saveAds(ads);
-    resetForm();
-    renderDashboard();
-    alert('বিজ্ঞাপনের হিসাব সফলভাবে সংরক্ষিত হয়েছে!');
   });
 
-  // এডিট বাটনে ক্লিক করার সময় পাসওয়ার্ড ভেরিফিকেশন
   function editAd(id) {
     if (!verifyCurrentAccountPassword()) return;
 
-    const ads = getAds();
-    const ad = ads.find(a => a.id === id);
+    const ad = adsList.find(a => a.id === id);
     if (!ad) return;
 
     document.getElementById('edit-id').value = ad.id;
@@ -2019,15 +1999,11 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ডিলিট করার সময় পাসওয়ার্ড ভেরিফিকেশন
   function deleteAd(id) {
     if (!verifyCurrentAccountPassword()) return;
 
     if (confirm('আপনি কি এই বিজ্ঞাপনের হিসাবটি তালিকা থেকে মুছতে চান?')) {
-      let ads = getAds();
-      ads = ads.filter(a => a.id !== id);
-      saveAds(ads);
-      renderDashboard();
+      adsRef.child(id).remove();
     }
   }
 
@@ -2042,10 +2018,9 @@
     togglePaidInput();
   }
 
-  // ১. নির্দিষ্ট একক ইনভয়েস প্রিন্ট
+  // একক ইনভয়েস প্রিন্ট
   function printReceipt(id) {
-    const ads = getAds();
-    const ad = ads.find(a => a.id === id);
+    const ad = adsList.find(a => a.id === id);
     if (!ad) return;
 
     let statusText = 'UNPAID / DUE';
@@ -2056,10 +2031,10 @@
       statusText = 'PAID (পরিশোধিত)';
       stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID</div>`;
     } else if (ad.status === 'unpaid/due') {
-      statusText = 'UNPAID / DUE (বকেয়া)';
+      statusText = 'UNPAID / DUE (বকেয়া)';
       stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">DELIVERED</div>`;
     } else {
-      statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
+      statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
     }
 
     const isOnline = (ad.mode === 'online');
@@ -2068,7 +2043,7 @@
     document.getElementById('inv-print-date').innerText = isOnline ? (ad.onlineStartDate || '-') : (ad.printDate || '-');
     document.getElementById('inv-client-name').innerText = ad.clientName;
     document.getElementById('inv-ad-mode').innerText = isOnline ? 'অনলাইন ডিজিটাল পোর্টাল বিজ্ঞাপন' : 'জাতীয় দৈনিক প্রিন্ট পত্রিকা বিজ্ঞাপন';
-    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / প্রযোজ্য নয়';
+    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / প্রযোজ্য নয়';
     document.getElementById('inv-status').innerText = statusText;
 
     if (isOnline) {
@@ -2085,41 +2060,40 @@
         💻 Web: ${ad.webSize}<br>
         📱 Mob: ${ad.mobSize}
       `;
-      document.getElementById('inv-item-rate').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
+      document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
     } else {
       document.getElementById('inv-memo-line').style.display = 'block';
       document.getElementById('inv-paper-age-line').style.display = 'block';
       document.getElementById('inv-paper-issue-line').style.display = 'block';
       document.getElementById('inv-vat-label').innerText = 'সরকারি ভ্যাট / ট্যাক্স (১৫%):';
 
-      document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
-      document.getElementById('inv-memo-date').innerText = ad.memoDate || 'প্রযোজ্য নয়';
+      document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
+      document.getElementById('inv-memo-date').innerText = ad.memoDate || 'প্রযোজ্য নয়';
       document.getElementById('inv-paper-age').innerText = ad.paperAge || '-';
       document.getElementById('inv-paper-issue').innerText = ad.paperIssue || '-';
 
-      document.getElementById('inv-item-desc').innerHTML = `দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা<br><small style="color:#555;">নির্ধারিত কলাম ইঞ্চিতে প্রকাশিত</small>`;
+      document.getElementById('inv-item-desc').innerHTML = `দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা<br><small style="color:#555;">নির্ধারিত কলাম ইঞ্চিতে প্রকাশিত</small>`;
       document.getElementById('inv-item-dimensions').innerText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি (${ad.totalColInch} ইঞ্চি)`;
-      document.getElementById('inv-item-rate').innerText = `৳ ${ad.ratePerInch.toLocaleString()} / ইঞ্চি`;
+      document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.ratePerInch || 0).toLocaleString()} / ইঞ্চি`;
     }
 
-    document.getElementById('inv-base-price').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
-    document.getElementById('inv-sum-base').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
-    document.getElementById('inv-sum-vat').innerText = `৳ ${ad.vat.toLocaleString()}`;
-    document.getElementById('inv-sum-total').innerText = `৳ ${ad.totalWithVat.toLocaleString()}`;
-    document.getElementById('inv-sum-paid').innerText = `৳ ${ad.paidAmount.toLocaleString()}`;
-    document.getElementById('inv-sum-due').innerText = `৳ ${ad.due.toLocaleString()}`;
+    document.getElementById('inv-base-price').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-base').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-vat').innerText = `৳ ${Number(ad.vat || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-total').innerText = `৳ ${Number(ad.totalWithVat || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-paid').innerText = `৳ ${Number(ad.paidAmount || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-due').innerText = `৳ ${Number(ad.due || 0).toLocaleString()}`;
 
     document.body.className = 'printing-invoice';
     window.print();
   }
 
-  // ২. নির্দিষ্ট সময়সীমার সামারি স্টেটমেন্ট প্রিন্ট
+  // নির্দিষ্ট সময়সীমার সামারি স্টেটমেন্ট প্রিন্ট
   function printDateRangeSummary() {
-    const ads = getAds();
     const sDate = document.getElementById('filterStartDate').value;
     const eDate = document.getElementById('filterEndDate').value;
 
-    const filtered = ads.filter(ad => {
+    const filtered = adsList.filter(ad => {
       const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
       if (sDate && eDate) return (refDate >= sDate && refDate <= eDate);
       if (sDate) return (refDate >= sDate);
@@ -2128,7 +2102,7 @@
     });
 
     if (filtered.length === 0) {
-      alert('নির্বাচিত সময়সীমার মধ্যে কোনো বিজ্ঞাপনের হিসাব পাওয়া যায়নি!');
+      alert('নির্বাচিত সময়সীমার মধ্যে কোনো বিজ্ঞাপনের হিসাব পাওয়া যায়নি!');
       return;
     }
 
@@ -2148,9 +2122,9 @@
     tbody.innerHTML = '';
 
     filtered.forEach((ad, i) => {
-      sumTotal += Number(ad.totalWithVat);
-      sumPaid += Number(ad.paidAmount);
-      sumDue += Number(ad.due);
+      sumTotal += Number(ad.totalWithVat || 0);
+      sumPaid += Number(ad.paidAmount || 0);
+      sumDue += Number(ad.due || 0);
 
       const isOnline = (ad.mode === 'online');
       let details = '';
@@ -2174,10 +2148,10 @@
           ${ad.clientName} <small style="color:#555;">(${ad.mediaSource || 'সরাসরি'})</small>
         </td>
         <td>${details}</td>
-        <td style="text-align: right;">৳${ad.basePrice.toLocaleString()}</td>
-        <td style="text-align: right; font-weight:bold;">৳${ad.totalWithVat.toLocaleString()}</td>
-        <td style="text-align: right; color:green;">৳${ad.paidAmount.toLocaleString()}</td>
-        <td style="text-align: right; color:red; font-weight:bold;">৳${ad.due.toLocaleString()}</td>
+        <td style="text-align: right;">৳${Number(ad.basePrice || 0).toLocaleString()}</td>
+        <td style="text-align: right; font-weight:bold;">৳${Number(ad.totalWithVat || 0).toLocaleString()}</td>
+        <td style="text-align: right; color:green;">৳${Number(ad.paidAmount || 0).toLocaleString()}</td>
+        <td style="text-align: right; color:red; font-weight:bold;">৳${Number(ad.due || 0).toLocaleString()}</td>
         <td style="text-align: center; font-weight:bold; text-transform: uppercase;">${ad.status}</td>
       `;
       tbody.appendChild(tr);
@@ -2192,8 +2166,7 @@
     window.print();
   }
 
-  // ইনিশিয়ালাইজেশন
-  getUsers();
+  // প্রারম্ভিক কল
   checkAuth();
   handleModeChange();
   togglePaidInput();
