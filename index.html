@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ভোরের বাণী - বিজ্ঞাপন বিলিং ও হিসাব রেজিস্টার</title>
+  <!-- Firebase SDK স্ক্রিপ্ট -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // ধাপ ১ থেকে পাওয়া আপনার নিজস্ব Firebase কনফিগ এখানে বসান
+  const firebaseConfig = {
+  apiKey: "AIzaSyAikR4KcImPRFbb4XIcg5jSgkaVoSNZMDQ",
+  authDomain: "bhorerbani-ads.firebaseapp.com",
+  databaseURL: "https://bhorerbani-ads-default-rtdb.firebaseio.com",
+  projectId: "bhorerbani-ads",
+  storageBucket: "bhorerbani-ads.firebasestorage.app",
+  messagingSenderId: "388686180071",
+  appId: "1:388686180071:web:57c9bf37abf8a4e60bbc42",
+  measurementId: "G-EDV5B8M4ZF"
+};
+
+  // ফায়ারবেস ইনিশিয়ালাইজ
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #b91c1c;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --text: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px;
+    }
+
+    /* লগইন পেজ স্টাইল */
+    #login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e1b4b, #450a0a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .login-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px 28px;
+      border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .login-logo {
+      height: 48px;
+      margin-bottom: 12px;
+    }
+
+    .login-card h2 {
+      font-size: 18px;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .login-card p {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .login-card .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .login-card label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .btn-login {
+      background: #b91c1c;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-login:hover { background: #991b1b; }
+
+    /* ড্যাশবোর্ড হেডার */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card);
+      padding: 14px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .site-logo {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .header-actions button {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .header-actions button:hover { background: #e2e8f0; }
+
+    .btn-logout {
+      background: #fee2e2 !important;
+      color: #b91c1c !important;
+      border-color: #fca5a5 !important;
+    }
+
+    /* মেট্রিক্স কার্ড */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .stat-card p {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .stat-card h2 {
+      font-size: 24px;
+      margin-top: 6px;
+    }
+
+    .text-green { color: var(--success); }
+    .text-red { color: var(--danger); }
+    .text-blue { color: var(--accent); }
+    .text-orange { color: var(--warning); }
+
+    /* অফলাইন ও অনলাইন আয়ের বক্স */
+    .income-split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .income-split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .income-box {
+      border-radius: 8px;
+      padding: 18px;
+      color: #1e293b;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .offline-income-card {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-left: 6px solid #475569;
+    }
+
+    .online-income-card {
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      border-left: 6px solid #b91c1c;
+    }
+
+    .income-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed rgba(0,0,0,0.15);
+      padding-bottom: 8px;
+    }
+
+    .income-box-header h3 {
+      font-size: 15px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .income-details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .income-mini-stat font { font-size: 11px; color: #64748b; }
+    .income-mini-stat strong { font-size: 16px; display: block; margin-top: 2px; }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 20px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 14px;
+      color: var(--primary);
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+
+    .mode-selector-box {
+      background: linear-gradient(135deg, #450a0a, #7f1d1d, #991b1b);
+      border: 2px solid #ef4444;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(127, 29, 29, 0.35);
+    }
+
+    .mode-selector-box label.title {
+      color: #fee2e2;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-options {
+      display: flex;
+      gap: 12px;
+    }
+
+    .mode-option-label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #ffffff;
+      color: #7f1d1d;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+
+    .mode-option-label input { width: auto; margin: 0; cursor: pointer; accent-color: #dc2626; }
+
+    .form-group { margin-bottom: 11px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: #475569;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .row { display: flex; gap: 10px; }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .btn-save { background: #b91c1c; color: white; }
+    .btn-save:hover { opacity: 0.95; }
+
+    .btn-cancel {
+      background: #94a3b8;
+      color: white;
+      display: none;
+      margin-top: 6px;
+    }
+
+    .calc-summary {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .date-filter-panel {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .date-input-wrap { flex: 1; min-width: 140px; }
+    .date-input-wrap label { margin-bottom: 2px; font-size: 11px; }
+
+    .btn-date-filter {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 35px;
+    }
+
+    .btn-date-clear {
+      background: #94a3b8;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 35px;
+    }
+
+    .btn-summary-print {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 35px;
+    }
+
+    .filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+
+    .tab-btn {
+      padding: 6px 12px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .table-container { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    th { background: #f8fafc; color: #475569; font-weight: 600; }
+
+    .action-btn {
+      padding: 4px 7px;
+      border: none;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 2px;
+    }
+
+    .btn-edit { background: #e0f2fe; color: #0369a1; }
+    .btn-del { background: #fee2e2; color: #b91c1c; }
+    .btn-print { background: #fef3c7; color: #92400e; }
+
+    .status-select {
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      width: auto;
+    }
+
+    .status-paid { background: #dcfce7; color: #166534; border-color: #86efac; }
+    .status-in-process { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+    .status-unpaid-due { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+    .mode-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    .badge-offline { background: #e2e8f0; color: #334155; }
+    .badge-online { background: #fee2e2; color: #991b1b; }
+
+    .expired-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      margin-left: 4px;
+    }
+
+    .active-badge {
+      display: inline-block;
+      background: #22c55e;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
+    .size-pill {
+      display: inline-block;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      margin-top: 2px;
+    }
+
+    /* মোডাল উইন্ডো স্টাইল */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .modal-box {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 580px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    /* =================== প্রিন্ট স্টাইলিং =================== */
+    #print-invoice-area, #print-summary-area {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm 15mm 12mm 15mm;
+      }
+
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .container, #login-screen, .modal-backdrop {
+        display: none !important;
+      }
+
+      body.printing-invoice #print-invoice-area {
+        display: block !important;
+        width: 100%;
+        background: white;
+        color: #000;
+      }
+
+      body.printing-summary #print-summary-area {
+        display: block !important;
+        width: 100%;
+        background: white;
+        color: #000;
+      }
+
+      .a4-page {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 255mm;
+      }
+
+      .inv-header {
+        border-bottom: 2px solid #000;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .inv-print-logo {
+        height: 48px;
+        margin-bottom: 4px;
+      }
+
+      .inv-header p {
+        font-size: 12px;
+        color: #333;
+      }
+
+      .inv-meta-grid {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .inv-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      .inv-table th, .inv-table td {
+        border: 1px solid #000 !important;
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .inv-table th {
+        background-color: #f2f2f2 !important;
+        font-weight: bold;
+      }
+
+      .inv-middle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        margin-bottom: 30px;
+      }
+
+      .stamp-area {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stamp-badge {
+        display: inline-block;
+        padding: 10px 24px;
+        font-size: 26px;
+        font-weight: 900;
+        text-transform: uppercase;
+        border-radius: 6px;
+        transform: rotate(-10deg);
+        letter-spacing: 2px;
+      }
+
+      .stamp-paid {
+        color: #dc2626 !important;
+        border: 4px solid #dc2626 !important;
+        background: rgba(220, 38, 38, 0.05);
+      }
+
+      .stamp-delivered {
+        color: #16a34a !important;
+        border: 4px solid #16a34a !important;
+        background: rgba(22, 163, 74, 0.05);
+      }
+
+      .inv-summary { width: 360px; }
+
+      .inv-summary table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      .inv-summary td {
+        padding: 6px 10px;
+        border: 1px solid #000;
+      }
+
+      .inv-signatures {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 40px;
+        padding-right: 20px;
+      }
+
+      .signature-block {
+        text-align: center;
+        width: 200px;
+        border-top: 1px dashed #000;
+        padding-top: 6px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        margin-top: 15px;
+      }
+      .summary-table th, .summary-table td {
+        border: 1px solid #000;
+        padding: 6px 8px;
+        text-align: left;
+      }
+      .summary-table th { background-color: #f2f2f2; }
+
+      .summary-cards-print {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        gap: 10px;
+      }
+      .summary-card-p {
+        border: 1px solid #000;
+        padding: 8px 12px;
+        flex: 1;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- লগইন স্ক্রিন -->
+<div id="login-screen">
+  <div class="login-card">
+    <img src="logo.svg" alt="ভোরের বাণী" class="login-logo" onerror="this.src='https://placehold.co/240x60/b91c1c/ffffff?text=ভোরের+বাণী'">
+    <h2>অ্যাডমিন ও বিলিং লগইন</h2>
+    <p>নিরাপদ সিস্টেমে প্রবেশ করতে ইমেইল ও পাসওয়ার্ড দিন</p>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label>ব্যবহারকারীর ইমেইল</label>
+        <input type="email" id="loginEmail" required placeholder="admin@bhorerbani.com">
+      </div>
+      <div class="form-group">
+        <label>গোপন পাসওয়ার্ড</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn-login">লগইন করুন</button>
+    </form>
+    <div style="font-size: 11px; color: #94a3b8; margin-top: 15px;">
+      ডিফল্ট অ্যাডমিন: admin@bhorerbani.com | পাসওয়ার্ড: admin123
+    </div>
+  </div>
+</div>
+
+<!-- মূল ড্যাশবোর্ড -->
+<div class="container" id="dashboard-container" style="display: none;">
+  <header>
+    <div class="brand-section">
+      <img src="logo.svg" alt="ভোরের বাণী" class="site-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
+      <div>
+        <h1 style="font-size: 18px; margin: 0; color: #0f172a;">বিজ্ঞাপন বিলিং ও হিসাব রেজিস্টার</h1>
+        <p style="font-size: 12px; margin: 0; color: #64748b;">দৈনিক ভোরের বাণী | <span id="currentUserRoleDisplay" style="font-weight:bold; color:#b91c1c;"></span></p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;">👥 ইউজার ম্যানেজমেন্ট</button>
+      <button onclick="openProfileModal()">👤 আমার প্রোফাইল</button>
+      <button class="btn-logout" onclick="logout()">লগআউট</button>
+    </div>
+  </header>
+
+  <!-- মেট্রিক্স সারাংশ -->
+  <div class="metrics-grid">
+    <div class="stat-card">
+      <p>সর্বমোট আদায়কৃত আয় (Paid)</p>
+      <h2 class="text-green" id="stat-paid">৳ 0</h2>
+    </div>
+    <div class="stat-card">
+      <p>সর্বমোট বকেয়া (Due)</p>
+      <h2 class="text-red" id="stat-due">৳ 0</h2>
+    </div>
+    <div class="stat-card">
+      <p>সর্বমোট বিল (ভ্যাটসহ)</p>
+      <h2 class="text-blue" id="stat-total">৳ 0</h2>
+    </div>
+    <div class="stat-card">
+      <p>প্রক্রিয়াধীন বিল (In Process)</p>
+      <h2 class="text-orange" id="stat-process">0 টি</h2>
+    </div>
+  </div>
+
+  <!-- অফলাইন ও অনলাইন আয়ের আলাদা ২টি বক্স -->
+  <div class="income-split-grid">
+    <div class="income-box offline-income-card">
+      <div class="income-box-header">
+        <h3>📰 অফলাইন বিজ্ঞাপন হিসাব (Print Income)</h3>
+        <span style="font-size: 12px; background: #e2e8f0; padding: 2px 8px; border-radius: 12px; font-weight: bold;" id="offline-ad-count">0 টি বিজ্ঞাপন</span>
+      </div>
+      <div class="income-details-grid">
+        <div class="income-mini-stat">
+          <font>মোট আদায় (Paid)</font>
+          <strong class="text-green" id="offline-stat-paid">৳ 0</strong>
+        </div>
+        <div class="income-mini-stat">
+          <font>মোট বকেয়া (Due)</font>
+          <strong class="text-red" id="offline-stat-due">৳ 0</strong>
+        </div>
+        <div class="income-mini-stat">
+          <font>মোট চুক্তি (১৫% ভ্যাটসহ)</font>
+          <strong class="text-blue" id="offline-stat-total">৳ 0</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="income-box online-income-card">
+      <div class="income-box-header">
+        <h3 style="color: #991b1b;">🌐 অনলাইন বিজ্ঞাপন হিসাব (Online Income)</h3>
+        <span style="font-size: 12px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 12px; font-weight: bold;" id="online-ad-count">0 টি বিজ্ঞাপন</span>
+      </div>
+      <div class="income-details-grid">
+        <div class="income-mini-stat">
+          <font>মোট আদায় (Paid)</font>
+          <strong class="text-green" id="online-stat-paid">৳ 0</strong>
+        </div>
+        <div class="income-mini-stat">
+          <font>মোট বকেয়া (Due)</font>
+          <strong class="text-red" id="online-stat-due">৳ 0</strong>
+        </div>
+        <div class="income-mini-stat">
+          <font>মোট চুক্তি (ভ্যাট ০%)</font>
+          <strong class="text-blue" id="online-stat-total">৳ 0</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <h3 id="form-title">বিজ্ঞাপন বিলিং এন্ট্রি ফর্ম</h3>
+      <form id="adForm">
+        <input type="hidden" id="edit-id">
+
+        <div class="mode-selector-box">
+          <label class="title">✨ বিজ্ঞাপনের ধরন নির্বাচন করুন (AD TYPE):</label>
+          <div class="mode-options">
+            <label class="mode-option-label">
+              <input type="radio" name="adMode" value="offline" checked onchange="handleModeChange()">
+              📰 প্রিন্ট পত্রিকা (১৫% ভ্যাট)
+            </label>
+            <label class="mode-option-label">
+              <input type="radio" name="adMode" value="online" onchange="handleModeChange()">
+              🌐 অনলাইন পোর্টাল (ভ্যাট ০%)
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group" style="flex: 1;">
+            <label>বিল নং (Bill No)</label>
+            <input type="text" id="billNo" required placeholder="উদা: BILL-2026/01">
+          </div>
+          <div class="form-group" style="flex: 1;" id="printDateFieldWrapper">
+            <label>ছাপার তারিখ (Print Date)</label>
+            <input type="date" id="printDate">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>প্রতিষ্ঠানের নাম (Client / Org)</label>
+          <input type="text" id="clientName" required placeholder="উদা: ওয়ালটন / জেলা প্রশাসন">
+        </div>
+
+        <div class="form-group">
+          <label>মাধ্যম (Media / Source) <small style="color: #94a3b8; font-weight: normal;">(ঐচ্ছিক)</small></label>
+          <input type="text" id="mediaSource" placeholder="উদা: সরাসরি, এজেন্সী, বিজ্ঞাপন প্রতিনিধি">
+        </div>
+
+        <!-- প্রিন্ট ফর্ম -->
+        <div id="offlineFormSection">
+          <div class="row">
+            <div class="form-group" style="flex: 1.3;">
+              <label>স্মারক নং (Memo / Ref No)</label>
+              <input type="text" id="memoNo" placeholder="উদা: স্মারক নং-০৫.১০...">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>স্মারক তারিখ</label>
+              <input type="date" id="memoDate">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group" style="flex: 1;">
+              <label>পত্রিকার বয়স (বছর)</label>
+              <input type="text" id="paperAge" placeholder="উদা: ১২ বছর">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>পত্রিকার সংখ্যা (ইস্যু নং)</label>
+              <input type="text" id="paperIssue" placeholder="উদা: বর্ষ ১২, সংখ্যা ৪৫">
+            </div>
+          </div>
+
+          <div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:10px;">
+            <label style="color:#0f172a; margin-bottom:6px;">বিজ্ঞাপনের সাইজ নির্ধারণ (কলাম × ইঞ্চি):</label>
+            <div class="row">
+              <div class="form-group" style="flex: 1; margin-bottom:0;">
+                <label>কলাম (Column)</label>
+                <input type="number" step="any" id="colSize" placeholder="উদা: 4" oninput="calculateBill()">
+              </div>
+              <div class="form-group" style="flex: 1; margin-bottom:0;">
+                <label>ইঞ্চি (Inch)</label>
+                <input type="number" step="any" id="inchSize" placeholder="উদা: 8" oninput="calculateBill()">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>মূল্য হার / প্রতি ইঞ্চি রেট (৳)</label>
+            <input type="number" step="any" id="ratePerInch" placeholder="উদা: 450" oninput="calculateBill()">
+          </div>
+        </div>
+
+        <!-- অনলাইন ফর্ম -->
+        <div id="onlineFormSection" style="display: none;">
+          <div class="row">
+            <div class="form-group" style="flex: 1;">
+              <label>অনলাইন শুরুর তারিখ (Start Date)</label>
+              <input type="date" id="onlineStartDate">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>মেয়াদ শেষের তারিখ (Exp. Date)</label>
+              <input type="date" id="onlineEndDate">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>অনলাইন স্লট নির্বাচন করুন</label>
+            <select id="onlineSlot" onchange="handleOnlineSlotChange()">
+              <optgroup label="🎬 ইন-ভিডিও বিজ্ঞাপন (In-Video Ads)">
+                <option value="In-Video Pre-Roll / Mid-Roll Ad" data-web="1920x1080 (16:9)" data-mob="1080x1920 (9:16)" data-rate="5000">In-Video Ad (ভিডিওর শুরু/মাঝে স্পন্সরশিপ) - ৳ ৫,০০০</option>
+                <option value="In-Video Overlay Banner" data-web="468px * 60px" data-mob="320px * 50px" data-rate="3000">In-Video Overlay (ভিডিওর নিচে ভাসমান ব্যানার) - ৳ ৩,০০০</option>
+              </optgroup>
+
+              <optgroup label="🌟 সুপার প্রিমিয়াম (Super Premium - ৳ 3,000/মাস)">
+                <option value="Home BB Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
+                <option value="Article Header" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Header (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
+                <option value="Home BB Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Home BB Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
+                <option value="Article Sticky" data-web="970px * 90px" data-mob="320px * 100px" data-rate="3000">Article Sticky (Web: 970x90 | Mob: 320x100) - ৳ 3,000[cite: 1]</option>
+              </optgroup>
+
+              <optgroup label="⚡ স্ট্যান্ডার্ড স্লট (Standard - ৳ 2,500/মাস)">
+                <option value="Home BB-W-01" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-01 (Web: 970x250 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
+                <option value="Home BB-W-02" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2500">Home BB-W-02 (Web: 970x250 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
+                <option value="Article Body W-1 / W-2" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2500">Article Body Banner (Web: 720x90 | Mob: 300x250) - ৳ 2,500[cite: 1]</option>
+              </optgroup>
+
+              <optgroup label="🔷 রেগুলার স্লট (Regular - ৳ 2,000/মাস)">
+                <option value="Home BB-W-03 / W-04" data-web="970px * 250px" data-mob="300px * 250px" data-rate="2000">Home BB-W-03 / W-04 (Web: 970x250 | Mob: 300x250) - ৳ 2,000[cite: 1]</option>
+                <option value="Article W-3" data-web="720px * 90px" data-mob="300px * 250px" data-rate="2000">Article W-3 Bottom (Web: 720x90 | Mob: 300x250) - ৳ 2,000[cite: 1]</option>
+                <option value="Article Sidebar BB_WM" data-web="300px * 250px" data-mob="300px * 250px" data-rate="2000">Article Sidebar BB_WM (300x250) - ৳ 2,000[cite: 1]</option>
+              </optgroup>
+
+              <optgroup label="🔸 প্রিমিয়াম ও স্পেশাল">
+                <option value="Sidebar Mini BB_S_WM" data-web="300px * 100px" data-mob="300px * 100px" data-rate="1500">Sidebar Mini Banner (Web & Mob: 300x100) - ৳ 1,500[cite: 1]</option>
+                <option value="Sidebar Mid Banner" data-web="300px * 140px" data-mob="300px * 100px" data-rate="1500">Sidebar Mid Banner (Web: 300x140 | Mob: 300x100) - ৳ 1,500[cite: 1]</option>
+                <option value="Photo Overlay Ad" data-web="720px * 90px" data-mob="300px * 100px" data-rate="1500">Photo Overlay Banner (Web: 720x90) - ৳ 1,500[cite: 1]</option>
+              </optgroup>
+
+              <optgroup label="📢 ফেসবুক ফটোকার্ড">
+                <option value="Facebook News Photocard (১০০টি)" data-web="1000px * 100px" data-mob="1000px * 100px" data-rate="65000">ফেসবুক নিউজ ফটোকার্ড (১০০টি ফটোকার্ড স্পন্সর) - ৳ ৬৫,০০০[cite: 1]</option>
+              </optgroup>
+
+              <optgroup label="কাস্টম স্লট">
+                <option value="কাস্টম অনলাইন স্লট" data-web="কাস্টম মাপ" data-mob="কাস্টম মাপ" data-rate="0">অন্যান্য কাস্টম অনলাইন ব্যানার</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; margin-bottom:12px;">
+            <div style="font-size:12px; margin-bottom:3px;">
+              💻 <strong>Web View Size:</strong> <span id="displayWebSize" class="size-pill">1920x1080 (16:9)</span>
+            </div>
+            <div style="font-size:12px;">
+              📱 <strong>Phone View Size:</strong> <span id="displayMobSize" class="size-pill">1080x1920 (9:16)</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>টার্গেট লিংক (Target Click URL) <small style="color: #94a3b8; font-weight: normal;">(ঐচ্ছিক)</small></label>
+            <input type="url" id="onlineTargetUrl" placeholder="https://clientwebsite.com">
+          </div>
+
+          <div class="form-group">
+            <label>চুক্তি অনুযায়ী মোট মূল্য (৳)</label>
+            <input type="number" step="any" id="onlineBasePrice" placeholder="0" oninput="calculateBill()">
+          </div>
+        </div>
+
+        <!-- পেমেন্ট স্ট্যাটাস -->
+        <div class="form-group">
+          <label>পেমেন্ট স্ট্যাটাস (Payment Status)</label>
+          <select id="status" onchange="togglePaidInput()">
+            <option value="unpaid/due">Unpaid / Due (বকেয়া)</option>
+            <option value="on process">On Process (প্রক্রিয়াধীন)</option>
+            <option value="paid">Paid (পরিশোধিত)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="paidAmountWrapper">
+          <label>পরিশোধিত / জমা টাকা (৳)</label>
+          <input type="number" step="any" id="paidAmount" placeholder="0" oninput="calculateBill()">
+        </div>
+
+        <div class="calc-summary">
+          <div id="measuringSummaryLine">মোট পরিমাপ: <strong><span id="preview-col-inch">0</span> কলাম ইঞ্চি</strong></div>
+          <div>মূল্য (ভ্যাট ছাড়া): <strong>৳ <span id="preview-base-price">0.00</span></strong></div>
+          <div>ভ্যাট / ট্যাক্স: <strong>৳ <span id="preview-vat">0.00</span></strong> <small id="preview-vat-rate" style="color:#64748b;">(১৫%)</small></div>
+          <div style="font-size:13px; color:#1e40af;">সর্বমোট বিল: <strong>৳ <span id="preview-total-bill">0.00</span></strong></div>
+          <div style="color:#dc2626;">বকেয়া (Due): <strong>৳ <span id="preview-due">0.00</span></strong></div>
+        </div>
+
+        <button type="submit" class="btn btn-save" id="save-btn">বিল সংরক্ষণ করুন</button>
+        <button type="button" class="btn btn-cancel" id="cancel-btn" onclick="resetForm()">বাতিল</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="date-filter-panel">
+        <div class="date-input-wrap">
+          <label>শুরুর তারিখ</label>
+          <input type="date" id="filterStartDate">
+        </div>
+        <div class="date-input-wrap">
+          <label>শেষের তারিখ</label>
+          <input type="date" id="filterEndDate">
+        </div>
+        <button class="btn-date-filter" onclick="applyDateFilter()">🔍 ফিল্টার</button>
+        <button class="btn-date-clear" onclick="clearDateFilter()">রিসেট</button>
+        <button class="btn-summary-print" onclick="printDateRangeSummary()">📊 নির্দিষ্ট সময়ের সামারি প্রিন্ট</button>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="setFilter('all', this)">সকল বিজ্ঞাপন</button>
+        <button class="tab-btn" onclick="setFilter('paid', this)">✅ পরিশোধিত (Paid)</button>
+        <button class="tab-btn" onclick="setFilter('unpaid/due', this)">❌ বকেয়া (Unpaid)</button>
+        <button class="tab-btn" onclick="setFilter('on process', this)">⏳ প্রক্রিয়াধীন (On Process)</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ক্রমিক</th>
+              <th>বিল নং ও তারিখ</th>
+              <th>প্রতিষ্ঠান ও মাধ্যম</th>
+              <th>মাপ / স্লট (Web & Phone View)</th>
+              <th>মূল্য ও ভ্যাট</th>
+              <th>মোট ও বকেয়া</th>
+              <th>পেমেন্ট স্ট্যাটাস</th>
+              <th>অ্যাকশন</th>
+            </tr>
+          </thead>
+          <tbody id="adListBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== ৩. ইউজার ম্যানেজমেন্ট মডাল (শুধুমাত্র অ্যাডমিনের জন্য) =================== -->
+<div class="modal-backdrop" id="userModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 style="margin:0; font-size:16px;">👥 সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
+      <button class="close-btn" onclick="closeUserModal()">&times;</button>
+    </div>
+    
+    <form id="addUserForm" style="margin-bottom: 18px;">
+      <div class="row">
+        <div class="form-group" style="flex:1;">
+          <label>ব্যবহারকারীর নাম</label>
+          <input type="text" id="newUserName" required placeholder="উদা: ম্যানেজার">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>ইমেইল অ্যাড্রেস</label>
+          <input type="email" id="newUserEmail" required placeholder="user@bhorerbani.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>পাসওয়ার্ড</label>
+        <input type="text" id="newUserPass" required placeholder="পাসওয়ার্ড লিখুন">
+      </div>
+      <button type="submit" class="btn btn-save" style="margin-top:4px;">নতুন ইউজার যুক্ত করুন</button>
+    </form>
+
+    <div style="max-height: 240px; overflow-y: auto;">
+      <table style="font-size:12px;">
+        <thead>
+          <tr>
+            <th>নাম</th>
+            <th>ইমেইল</th>
+            <th>পাসওয়ার্ড</th>
+            <th>অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody id="userListTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- অ্যাডমিন দ্বারা ইউজারের ডাটা সরাসরি এডিট করার মিনি মডাল -->
+<div class="modal-backdrop" id="editUserModal" style="z-index: 10001;">
+  <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-header">
+      <h3 style="margin:0; font-size:15px;">✏️ ব্যবহারকারীর তথ্য পরিবর্তন</h3>
+      <button class="close-btn" onclick="closeEditUserModal()">&times;</button>
+    </div>
+    <form id="editUserForm">
+      <input type="hidden" id="editUserTargetId">
+      <div class="form-group">
+        <label>ব্যবহারকারীর নাম</label>
+        <input type="text" id="editUserName" required>
+      </div>
+      <div class="form-group">
+        <label>ইমেইল</label>
+        <input type="email" id="editUserEmail" required>
+      </div>
+      <div class="form-group">
+        <label>পাসওয়ার্ড (সরাসরি দৃশ্যমান)</label>
+        <input type="text" id="editUserPass" required>
+      </div>
+      <button type="submit" class="btn btn-save">আপডেট করুন</button>
+    </form>
+  </div>
+</div>
+
+<!-- =================== ৪. নিজস্ব প্রোফাইল এডিট মডাল =================== -->
+<div class="modal-backdrop" id="profileModal">
+  <div class="modal-box" style="max-width: 380px;">
+    <div class="modal-header">
+      <h3 style="margin:0; font-size:16px;">👤 আমার প্রোফাইল ও পাসওয়ার্ড পরিবর্তন</h3>
+      <button class="close-btn" onclick="closeProfileModal()">&times;</button>
+    </div>
+    <form id="profileEditForm">
+      <div class="form-group">
+        <label>আমার নাম</label>
+        <input type="text" id="profileName" required>
+      </div>
+      <div class="form-group">
+        <label>আমার ইমেইল</label>
+        <input type="email" id="profileEmail" required>
+      </div>
+      <div class="form-group">
+        <label>বর্তমান পাসওয়ার্ড</label>
+        <input type="password" id="profileOldPass" required placeholder="যাচাইয়ের জন্য দিন">
+      </div>
+      <div class="form-group">
+        <label>নতুন পাসওয়ার্ড (পরিবর্তন করতে চাইলে লিখুন)</label>
+        <input type="text" id="profileNewPass" placeholder="নতুন পাসওয়ার্ড">
+      </div>
+      <button type="submit" class="btn btn-save">প্রোফাইল সংরক্ষণ করুন</button>
+    </form>
+  </div>
+</div>
+
+<!-- =================== ৫. অফিশিয়াল A4 ইনভয়েস পেজ =================== -->
+<div id="print-invoice-area">
+  <div class="a4-page">
+    <div>
+      <div class="inv-header">
+        <div>
+          <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
+          <p>জাতীয় দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
+          <p>হেড অফিস: ঢাকা, বাংলাদেশ | ফোন: +৮৮০ ২-৯৮৭৬৫৪৩</p>
+        </div>
+        <div style="text-align: right;">
+          <h2 style="font-size: 18px; text-transform: uppercase; margin:0;">বিজ্ঞাপন বিল ও ভ্যাট চালান</h2>
+          <p style="margin-top:4px;">বিল নং: <strong id="inv-bill-no"></strong></p>
+          <p>তারিখ: <strong id="inv-print-date"></strong></p>
+        </div>
+      </div>
+
+      <div class="inv-meta-grid">
+        <div style="flex: 1.2;">
+          <p style="font-size: 11px; text-transform: uppercase; color: #555;">বিজ্ঞাপনদাতা / প্রতিষ্ঠান:</p>
+          <h3 id="inv-client-name" style="font-size: 16px; margin: 2px 0;"></h3>
+          <p>বিজ্ঞাপনের ধরন: <strong id="inv-ad-mode" style="color:#b91c1c;"></strong></p>
+          <p>মাধ্যম: <span id="inv-media-source"></span></p>
+          <p id="inv-memo-line">স্মারক নং: <span id="inv-memo-no"></span> (তারিখ: <span id="inv-memo-date"></span>)</p>
+        </div>
+        <div style="flex: 0.8; text-align: right;">
+          <p style="font-size: 11px; text-transform: uppercase; color: #555;">প্রকাশনা তথ্য:</p>
+          <p id="inv-paper-age-line">পত্রিকার বয়স: <strong id="inv-paper-age"></strong></p>
+          <p id="inv-paper-issue-line">সংখ্যা / ইস্যু: <strong id="inv-paper-issue"></strong></p>
+          <p>পেমেন্ট অবস্থা: <strong id="inv-status"></strong></p>
+        </div>
+      </div>
+
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th style="width: 6%; text-align: center;">ক্র:</th>
+            <th style="text-align: left;">বিজ্ঞাপনের বিবরণ</th>
+            <th style="width: 32%; text-align: center;">পরিমাপ / স্লট (Web & Mob View)</th>
+            <th style="width: 15%; text-align: right;">মূল্য হার</th>
+            <th style="width: 18%; text-align: right;">মূল বিল (৳)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center;">১</td>
+            <td id="inv-item-desc"></td>
+            <td style="text-align: center; font-weight: bold;" id="inv-item-dimensions"></td>
+            <td style="text-align: right;" id="inv-item-rate"></td>
+            <td style="text-align: right; font-weight: bold;" id="inv-base-price"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="inv-middle-row">
+        <div class="stamp-area" id="inv-stamp-container"></div>
+
+        <div class="inv-summary">
+          <table>
+            <tr>
+              <td>বিজ্ঞাপনের মূল মূল্য:</td>
+              <td style="text-align: right; font-weight: bold;" id="inv-sum-base"></td>
+            </tr>
+            <tr>
+              <td id="inv-vat-label">সরকারি ভ্যাট / ট্যাক্স:</td>
+              <td style="text-align: right; font-weight: bold;" id="inv-sum-vat"></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+              <td><strong>সর্বমোট প্রদেয় বিল:</strong></td>
+              <td style="text-align: right; font-weight: bold;" id="inv-sum-total"></td>
+            </tr>
+            <tr>
+              <td>পরিশোধিত / জমা অর্থ:</td>
+              <td style="text-align: right; color: green; font-weight: bold;" id="inv-sum-paid"></td>
+            </tr>
+            <tr>
+              <td><strong>অবশিষ্ট বকেয়া (Due):</strong></td>
+              <td style="text-align: right; color: red; font-weight: bold;" id="inv-sum-due"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-signatures">
+      <div class="signature-block">
+        সম্পাদক / বিজ্ঞাপন বিভাগ
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== ৬. আর্থিক সামারি রিপোর্ট পেজ =================== -->
+<div id="print-summary-area">
+  <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
+    <img src="logo.svg" alt="ভোরের বাণী" style="height:44px;" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'"><br>
+    <p style="margin: 4px 0 0 0; font-size: 13px;">বিজ্ঞাপন ও আয়-ব্যয় সামারি স্টেটমেন্ট (প্রিন্ট ও অনলাইন)</p>
+    <p style="margin: 3px 0 0 0; font-size: 12px; font-weight: bold;" id="summary-period-title">সময়কাল: সকল বিবরণী</p>
+  </div>
+
+  <div class="summary-cards-print">
+    <div class="summary-card-p">
+      <div style="font-size: 11px;">মোট বিজ্ঞাপন সংখ্যা</div>
+      <div style="font-size: 16px; font-weight: bold;" id="sum-count">0 টি</div>
+    </div>
+    <div class="summary-card-p">
+      <div style="font-size: 11px;">সর্বমোট বিল (ভ্যাটসহ)</div>
+      <div style="font-size: 16px; font-weight: bold;" id="sum-total-bill">৳ 0</div>
+    </div>
+    <div class="summary-card-p">
+      <div style="font-size: 11px;">মোট আদায়কৃত জমা (Paid)</div>
+      <div style="font-size: 16px; font-weight: bold; color: green;" id="sum-paid-bill">৳ 0</div>
+    </div>
+    <div class="summary-card-p">
+      <div style="font-size: 11px;">মোট বকেয়া (Due)</div>
+      <div style="font-size: 16px; font-weight: bold; color: red;" id="sum-due-bill">৳ 0</div>
+    </div>
+  </div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th style="width: 4%; text-align: center;">ক্র:</th>
+        <th>তারিখ</th>
+        <th>বিল নং</th>
+        <th>মাধ্যম ও ক্লায়েন্ট</th>
+        <th>মাপ / বিবরণী (Web & Mob)</th>
+        <th style="text-align: right;">মূল্য</th>
+        <th style="text-align: right;">মোট বিল</th>
+        <th style="text-align: right;">জমা</th>
+        <th style="text-align: right;">বকেয়া</th>
+        <th style="text-align: center;">স্ট্যাটাস</th>
+      </tr>
+    </thead>
+    <tbody id="summaryTableBody">
+    </tbody>
+  </table>
+
+  <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 12px;">
+    <div>রিপোর্ট তৈরির তারিখ: <span id="summary-print-date"></span></div>
+    <div style="border-top: 1px dashed #000; width: 180px; text-align: center; padding-top: 4px;">হিসাব রক্ষণ কর্মকর্তা / সম্পাদক</div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'newspaper_adv_tax_billing_v18_db';
+  const USERS_KEY = 'bhorerbani_users_v3_db';
+  const SESSION_KEY = 'bhorerbani_active_session_v3';
+
+  let currentFilter = 'all';
+  let filterStartDate = '';
+  let filterEndDate = '';
+
+  function getUsers() {
+    const data = localStorage.getItem(USERS_KEY);
+    if (!data) {
+      const initialUsers = [
+        { id: 1, name: "প্রধান অ্যাডমিন", email: "admin@bhorerbani.com", pass: "admin123", isSuper: true }
+      ];
+      localStorage.setItem(USERS_KEY, JSON.stringify(initialUsers));
+      return initialUsers;
+    }
+    return JSON.parse(data);
+  }
+
+  function saveUsers(users) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+
+  function getActiveSession() {
+    const data = sessionStorage.getItem(SESSION_KEY);
+    return data ? JSON.parse(data) : null;
+  }
+
+  // বর্তমান লগইন করা ইউজারের পাসওয়ার্ড যাচাই করার সার্বজনীন সিকিউরিটি ফাংশন
+  function verifyCurrentAccountPassword() {
+    const sessionUser = getActiveSession();
+    if (!sessionUser) return false;
+
+    const inputPass = prompt(`নিরাপত্তা যাচাই: "${sessionUser.name}" অ্যাকাউন্টের পাসওয়ার্ড লিখুন:`);
+    if (!inputPass) return false;
+
+    const users = getUsers();
+    const currentUser = users.find(u => u.id === sessionUser.id);
+
+    if (currentUser && currentUser.pass === inputPass) {
+      return true;
+    }
+
+    alert('ভুল পাসওয়ার্ড! তথ্য পরিবর্তন বা মুছে ফেলার অনুমতি নেই।');
+    return false;
+  }
+
+  // লগইন
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPassword').value;
+
+    const users = getUsers();
+    const found = users.find(u => u.email.toLowerCase() === email && u.pass === pass);
+
+    if (found) {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(found));
+      checkAuth();
+    } else {
+      alert('ভুল ইমেইল অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।');
+    }
+  });
+
+  function checkAuth() {
+    const sessionUser = getActiveSession();
+    if (sessionUser) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard-container').style.display = 'block';
+
+      if (sessionUser.isSuper) {
+        document.getElementById('currentUserRoleDisplay').innerText = `[অ্যাডমিন: ${sessionUser.name}]`;
+        document.getElementById('adminUserMgmtBtn').style.display = 'inline-block';
+      } else {
+        document.getElementById('currentUserRoleDisplay').innerText = `[ইউজার: ${sessionUser.name}]`;
+        document.getElementById('adminUserMgmtBtn').style.display = 'none';
+      }
+
+      renderDashboard();
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('dashboard-container').style.display = 'none';
+    }
+  }
+
+  function logout() {
+    if (confirm('আপনি কি নিশ্চিত যে লগআউট করতে চান?')) {
+      sessionStorage.removeItem(SESSION_KEY);
+      location.reload();
+    }
+  }
+
+  // ইউজার ম্যানেজমেন্ট (অ্যাডমিন)
+  function openUserModal() {
+    const sessionUser = getActiveSession();
+    if (!sessionUser || !sessionUser.isSuper) {
+      alert('অননুমোদিত অ্যাক্সেস! শুধুমাত্র অ্যাডমিন এই তালিকা দেখতে পারবেন।');
+      return;
+    }
+    document.getElementById('userModal').style.display = 'flex';
+    renderUserList();
+  }
+
+  function closeUserModal() {
+    document.getElementById('userModal').style.display = 'none';
+  }
+
+  function renderUserList() {
+    const users = getUsers();
+    const tbody = document.getElementById('userListTableBody');
+    tbody.innerHTML = '';
+
+    users.forEach(u => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${u.name}</strong></td>
+        <td>${u.email}</td>
+        <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b91c1c;">${u.pass}</code></td>
+        <td>
+          ${u.isSuper 
+            ? '<span style="color:#16a34a; font-weight:bold;">Super Admin</span>' 
+            : `<button class="action-btn btn-edit" onclick="openEditUserModal(${u.id})">Edit</button>
+               <button class="action-btn btn-del" onclick="deleteUser(${u.id})">Remove</button>`
+          }
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById('addUserForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('newUserName').value.trim();
+    const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('newUserPass').value.trim();
+
+    const users = getUsers();
+    if (users.some(u => u.email.toLowerCase() === email)) {
+      alert('এই ইমেইলে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে!');
+      return;
+    }
+
+    users.push({ id: Date.now(), name, email, pass, isSuper: false });
+    saveUsers(users);
+    document.getElementById('addUserForm').reset();
+    renderUserList();
+    alert('নতুন ইউজার সফলভাবে যুক্ত করা হয়েছে!');
+  });
+
+  function openEditUserModal(id) {
+    const users = getUsers();
+    const target = users.find(u => u.id === id);
+    if (!target) return;
+
+    document.getElementById('editUserTargetId').value = target.id;
+    document.getElementById('editUserName').value = target.name;
+    document.getElementById('editUserEmail').value = target.email;
+    document.getElementById('editUserPass').value = target.pass;
+
+    document.getElementById('editUserModal').style.display = 'flex';
+  }
+
+  function closeEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+  }
+
+  document.getElementById('editUserForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = Number(document.getElementById('editUserTargetId').value);
+    const name = document.getElementById('editUserName').value.trim();
+    const email = document.getElementById('editUserEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('editUserPass').value.trim();
+
+    const users = getUsers();
+    const idx = users.findIndex(u => u.id === id);
+
+    if (idx !== -1) {
+      users[idx].name = name;
+      users[idx].email = email;
+      users[idx].pass = pass;
+      saveUsers(users);
+      renderUserList();
+      closeEditUserModal();
+      alert('ইউজারের তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!');
+    }
+  });
+
+  function deleteUser(id) {
+    if (confirm('আপনি কি এই ইউজারকে স্থায়ীভাবে মুছে ফেলতে চান?')) {
+      let users = getUsers();
+      users = users.filter(u => u.id !== id);
+      saveUsers(users);
+      renderUserList();
+    }
+  }
+
+  // প্রোফাইল এডিট
+  function openProfileModal() {
+    const sessionUser = getActiveSession();
+    if (!sessionUser) return;
+
+    document.getElementById('profileName').value = sessionUser.name;
+    document.getElementById('profileEmail').value = sessionUser.email;
+    document.getElementById('profileOldPass').value = '';
+    document.getElementById('profileNewPass').value = '';
+
+    document.getElementById('profileModal').style.display = 'flex';
+  }
+
+  function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+  }
+
+  document.getElementById('profileEditForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const sessionUser = getActiveSession();
+    const users = getUsers();
+    const idx = users.findIndex(u => u.id === sessionUser.id);
+
+    if (idx === -1) return;
+
+    const oldPassInput = document.getElementById('profileOldPass').value;
+    if (users[idx].pass !== oldPassInput) {
+      alert('ভুল বর্তমান পাসওয়ার্ড! নিরাপত্তা নিশ্চিত করতে সঠিক পাসওয়ার্ড দিন।');
+      return;
+    }
+
+    const newName = document.getElementById('profileName').value.trim();
+    const newEmail = document.getElementById('profileEmail').value.trim().toLowerCase();
+    const newPass = document.getElementById('profileNewPass').value.trim();
+
+    users[idx].name = newName;
+    users[idx].email = newEmail;
+    if (newPass !== '') {
+      users[idx].pass = newPass;
+    }
+
+    saveUsers(users);
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(users[idx]));
+    alert('আপনার প্রোফাইল তথ্য ও পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
+    closeProfileModal();
+    checkAuth();
+  });
+
+  // বিজ্ঞাপন ডেটাবেস
+  function getAds() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  }
+
+  function saveAds(ads) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
+  }
+
+  function getStatusClass(status) {
+    if (status === 'paid') return 'status-paid';
+    if (status === 'on process') return 'status-in-process';
+    return 'status-unpaid-due';
+  }
+
+  function handleModeChange() {
+    const mode = document.querySelector('input[name="adMode"]:checked').value;
+    const offlineSection = document.getElementById('offlineFormSection');
+    const onlineSection = document.getElementById('onlineFormSection');
+    const printDateWrapper = document.getElementById('printDateFieldWrapper');
+    const measuringLine = document.getElementById('measuringSummaryLine');
+    const vatRateLabel = document.getElementById('preview-vat-rate');
+
+    if (mode === 'online') {
+      offlineSection.style.display = 'none';
+      onlineSection.style.display = 'block';
+      printDateWrapper.style.display = 'none';
+      measuringLine.style.display = 'none';
+      vatRateLabel.innerText = "(০% - প্রযোজ্য নয়)";
+      handleOnlineSlotChange();
+    } else {
+      offlineSection.style.display = 'block';
+      onlineSection.style.display = 'none';
+      printDateWrapper.style.display = 'block';
+      measuringLine.style.display = 'block';
+      vatRateLabel.innerText = "(১৫%)";
+    }
+    calculateBill();
+  }
+
+  function handleOnlineSlotChange() {
+    const select = document.getElementById('onlineSlot');
+    const selectedOption = select.options[select.selectedIndex];
+
+    const webSize = selectedOption.getAttribute('data-web') || 'N/A';
+    const mobSize = selectedOption.getAttribute('data-mob') || 'N/A';
+    const defaultRate = selectedOption.getAttribute('data-rate') || 0;
+
+    document.getElementById('displayWebSize').innerText = webSize;
+    document.getElementById('displayMobSize').innerText = mobSize;
+
+    if (defaultRate > 0) {
+      document.getElementById('onlineBasePrice').value = defaultRate;
+    }
+    calculateBill();
+  }
+
+  function togglePaidInput() {
+    const status = document.getElementById('status').value;
+    const paidWrapper = document.getElementById('paidAmountWrapper');
+    const paidInput = document.getElementById('paidAmount');
+
+    if (status === 'paid') {
+      paidWrapper.style.display = 'none';
+      paidInput.value = '';
+    } else {
+      paidWrapper.style.display = 'block';
+    }
+    calculateBill();
+  }
+
+  function calculateBill() {
+    const mode = document.querySelector('input[name="adMode"]:checked').value;
+    const status = document.getElementById('status').value;
+
+    let basePrice = 0;
+    let totalColInch = 0;
+    let vat = 0;
+
+    if (mode === 'offline') {
+      const col = parseFloat(document.getElementById('colSize').value) || 0;
+      const inch = parseFloat(document.getElementById('inchSize').value) || 0;
+      const rate = parseFloat(document.getElementById('ratePerInch').value) || 0;
+
+      totalColInch = col * inch;
+      basePrice = totalColInch * rate;
+      vat = basePrice * 0.15;
+      document.getElementById('preview-col-inch').innerText = totalColInch.toFixed(2);
+    } else {
+      basePrice = parseFloat(document.getElementById('onlineBasePrice').value) || 0;
+      vat = 0;
+    }
+
+    const totalWithVat = basePrice + vat;
+
+    let paid = 0;
+    let due = 0;
+
+    if (status === 'paid') {
+      paid = totalWithVat;
+      due = 0;
+    } else {
+      paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+      due = totalWithVat - paid;
+    }
+
+    document.getElementById('preview-base-price').innerText = basePrice.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('preview-vat').innerText = vat.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('preview-total-bill').innerText = totalWithVat.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('preview-due').innerText = due.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+    return { mode, totalColInch, basePrice, vat, totalWithVat, paid, due };
+  }
+
+  function setFilter(status, btnElement) {
+    currentFilter = status;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+    renderDashboard();
+  }
+
+  function applyDateFilter() {
+    filterStartDate = document.getElementById('filterStartDate').value;
+    filterEndDate = document.getElementById('filterEndDate').value;
+
+    if (!filterStartDate && !filterEndDate) {
+      alert('অনুগ্রহ করে অন্তত একটি তারিখ নির্বাচন করুন!');
+      return;
+    }
+    renderDashboard();
+  }
+
+  function clearDateFilter() {
+    document.getElementById('filterStartDate').value = '';
+    document.getElementById('filterEndDate').value = '';
+    filterStartDate = '';
+    filterEndDate = '';
+    renderDashboard();
+  }
+
+  function renderDashboard() {
+    const ads = getAds();
+    const tbody = document.getElementById('adListBody');
+    tbody.innerHTML = '';
+
+    let totalContractWithTax = 0;
+    let totalPaid = 0;
+    let inProcessCount = 0;
+
+    let offlineTotal = 0;
+    let offlinePaid = 0;
+    let offlineDue = 0;
+    let offlineCount = 0;
+
+    let onlineTotal = 0;
+    let onlinePaid = 0;
+    let onlineDue = 0;
+    let onlineCount = 0;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    ads.forEach(ad => {
+      const contract = Number(ad.totalWithVat);
+      const paid = Number(ad.paidAmount);
+      const due = Number(ad.due);
+
+      totalContractWithTax += contract;
+      totalPaid += paid;
+      if (ad.status === 'on process') inProcessCount++;
+
+      if (ad.mode === 'online') {
+        onlineTotal += contract;
+        onlinePaid += paid;
+        onlineDue += due;
+        onlineCount++;
+      } else {
+        offlineTotal += contract;
+        offlinePaid += paid;
+        offlineDue += due;
+        offlineCount++;
+      }
+    });
+
+    document.getElementById('stat-total').innerText = `৳ ${totalContractWithTax.toLocaleString()}`;
+    document.getElementById('stat-paid').innerText = `৳ ${totalPaid.toLocaleString()}`;
+    document.getElementById('stat-due').innerText = `৳ ${(totalContractWithTax - totalPaid).toLocaleString()}`;
+    document.getElementById('stat-process').innerText = `${inProcessCount} টি`;
+
+    document.getElementById('offline-ad-count').innerText = `${offlineCount} টি বিজ্ঞাপন`;
+    document.getElementById('offline-stat-paid').innerText = `৳ ${offlinePaid.toLocaleString()}`;
+    document.getElementById('offline-stat-due').innerText = `৳ ${offlineDue.toLocaleString()}`;
+    document.getElementById('offline-stat-total').innerText = `৳ ${offlineTotal.toLocaleString()}`;
+
+    document.getElementById('online-ad-count').innerText = `${onlineCount} টি বিজ্ঞাপন`;
+    document.getElementById('online-stat-paid').innerText = `৳ ${onlinePaid.toLocaleString()}`;
+    document.getElementById('online-stat-due').innerText = `৳ ${onlineDue.toLocaleString()}`;
+    document.getElementById('online-stat-total').innerText = `৳ ${onlineTotal.toLocaleString()}`;
+
+    const filteredAds = ads.filter(ad => {
+      const matchStatus = (currentFilter === 'all') || (ad.status === currentFilter);
+      let matchDate = true;
+      const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
+
+      if (filterStartDate && filterEndDate) {
+        matchDate = (refDate >= filterStartDate && refDate <= filterEndDate);
+      } else if (filterStartDate) {
+        matchDate = (refDate >= filterStartDate);
+      } else if (filterEndDate) {
+        matchDate = (refDate <= filterEndDate);
+      }
+
+      return matchStatus && matchDate;
+    });
+
+    filteredAds.forEach((ad, index) => {
+      const currentStatus = ad.status || 'unpaid/due';
+      const isOnline = (ad.mode === 'online');
+
+      let dimensionText = '';
+      let vatText = '';
+      let dateDisplay = '';
+      let expiryBadge = '';
+
+      if (isOnline) {
+        const isExpired = ad.onlineEndDate && (ad.onlineEndDate < todayStr);
+        if (isExpired) {
+          expiryBadge = `<span class="expired-badge">EXPIRED</span>`;
+        } else if (ad.onlineEndDate) {
+          expiryBadge = `<span class="active-badge">RUNNING</span>`;
+        }
+
+        dimensionText = `
+          <strong>${ad.onlineSlot}</strong> ${expiryBadge}<br>
+          <span style="color:#0284c7; font-size:11px;">💻 Web: ${ad.webSize}</span> | 
+          <span style="color:#7c3aed; font-size:11px;">📱 Mob: ${ad.mobSize}</span>
+        `;
+        vatText = `<span style="font-size:11px; color:#64748b;">(ভ্যাট নেই)</span>`;
+        dateDisplay = `
+          শুরু: ${ad.onlineStartDate || '-'}<br>
+          <span style="color:${isExpired ? '#ef4444' : '#0284c7'}; font-weight:bold;">মেয়াদ শেষ: ${ad.onlineEndDate || '-'}</span>
+        `;
+      } else {
+        dimensionText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি<br><strong style="color:#0284c7;">= ${ad.totalColInch} কলাম ইঞ্চি</strong>`;
+        vatText = `<span style="font-size:11px; color:#d97706;">+১৫% ভ্যাট: ৳${ad.vat.toLocaleString()}</span>`;
+        dateDisplay = `ছাপা: ${ad.printDate || '-'}`;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="text-align: center; font-weight: bold;">${index + 1}</td>
+        <td>
+          <span class="mode-badge ${isOnline ? 'badge-online' : 'badge-offline'}">${isOnline ? '🌐 অনলাইন' : '📰 প্রিন্ট'}</span><br>
+          <strong>${ad.billNo}</strong><br>
+          <span style="font-size:11px; color:#64748b;">${dateDisplay}</span>
+        </td>
+        <td>
+          <strong>${ad.clientName}</strong><br>
+          <span style="font-size:11px; color:#0284c7;">মাধ্যম: ${ad.mediaSource || 'সরাসরি'}</span><br>
+          ${!isOnline ? `<span style="font-size:11px; color:#64748b;">স্মারক: ${ad.memoNo || 'প্রযোজ্য নয়'}</span>` : ''}
+        </td>
+        <td>${dimensionText}</td>
+        <td>মূল: ৳${ad.basePrice.toLocaleString()}<br>${vatText}</td>
+        <td>
+          মোট: ৳${ad.totalWithVat.toLocaleString()}<br>
+          <span style="font-weight:bold; color:${ad.due > 0 ? '#dc2626' : '#16a34a'}; font-size:11px;">
+            বকেয়া: ৳${ad.due.toLocaleString()}
+          </span>
+        </td>
+        <td>
+          <select class="status-select ${getStatusClass(currentStatus)}" onchange="updateStatusDirectly(${ad.id}, this.value, this, '${currentStatus}')">
+            <option value="paid" ${currentStatus === 'paid' ? 'selected' : ''}>Paid</option>
+            <option value="on process" ${currentStatus === 'on process' ? 'selected' : ''}>On Process</option>
+            <option value="unpaid/due" ${currentStatus === 'unpaid/due' ? 'selected' : ''}>Unpaid / Due</option>
+          </select>
+        </td>
+        <td>
+          <button class="action-btn btn-print" onclick="printReceipt(${ad.id})" title="A4 ভ্যাট বিল প্রিন্ট">Print</button>
+          <button class="action-btn btn-edit" onclick="editAd(${ad.id})">Edit</button>
+          <button class="action-btn btn-del" onclick="deleteAd(${ad.id})">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // সরাসরি ড্রপডাউন থেকে স্ট্যাটাস পরিবর্তন (লগইন করা ইউজারের পাসওয়ার্ড ভেরিফিকেশনসহ)
+  function updateStatusDirectly(id, newStatus, selectElem, oldStatus) {
+    if (!verifyCurrentAccountPassword()) {
+      selectElem.value = oldStatus;
+      return;
+    }
+    const ads = getAds();
+    const idx = ads.findIndex(a => a.id == id);
+    if (idx !== -1) {
+      ads[idx].status = newStatus;
+      if (newStatus === 'paid') {
+        ads[idx].paidAmount = ads[idx].totalWithVat;
+        ads[idx].due = 0;
+      }
+      saveAds(ads);
+      renderDashboard();
+    }
+  }
+
+  // ফর্ম সাবমিট (নতুন যোগ বা এডিট সংরক্ষণ)
+  document.getElementById('adForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const editId = document.getElementById('edit-id').value;
+
+    // এডিট মোডে থাকলে পাসওয়ার্ড যাচাই নিশ্চিত করা হবে
+    if (editId && !verifyCurrentAccountPassword()) {
+      return;
+    }
+
+    const ads = getAds();
+    const calc = calculateBill();
+
+    const payload = {
+      mode: calc.mode,
+      billNo: document.getElementById('billNo').value,
+      clientName: document.getElementById('clientName').value,
+      mediaSource: document.getElementById('mediaSource').value.trim(),
+      basePrice: calc.basePrice,
+      vat: calc.vat,
+      totalWithVat: calc.totalWithVat,
+      paidAmount: calc.paid,
+      due: calc.due,
+      status: document.getElementById('status').value
+    };
+
+    if (calc.mode === 'offline') {
+      payload.printDate = document.getElementById('printDate').value;
+      payload.memoNo = document.getElementById('memoNo').value;
+      payload.memoDate = document.getElementById('memoDate').value;
+      payload.paperAge = document.getElementById('paperAge').value;
+      payload.paperIssue = document.getElementById('paperIssue').value;
+      payload.colSize = parseFloat(document.getElementById('colSize').value) || 0;
+      payload.inchSize = parseFloat(document.getElementById('inchSize').value) || 0;
+      payload.ratePerInch = parseFloat(document.getElementById('ratePerInch').value) || 0;
+      payload.totalColInch = calc.totalColInch;
+    } else {
+      const select = document.getElementById('onlineSlot');
+      const selectedOption = select.options[select.selectedIndex];
+
+      payload.onlineStartDate = document.getElementById('onlineStartDate').value;
+      payload.onlineEndDate = document.getElementById('onlineEndDate').value;
+      payload.onlineSlot = select.value;
+      payload.webSize = selectedOption.getAttribute('data-web') || 'N/A';
+      payload.mobSize = selectedOption.getAttribute('data-mob') || 'N/A';
+      payload.onlineTargetUrl = document.getElementById('onlineTargetUrl').value;
+      payload.onlineBasePrice = parseFloat(document.getElementById('onlineBasePrice').value) || 0;
+    }
+
+    if (payload.status !== 'paid' && payload.paidAmount > payload.totalWithVat) {
+      alert('জমার পরিমাণ মোট বিলের চেয়ে বেশি হতে পারবে না!');
+      return;
+    }
+
+    if (editId) {
+      const idx = ads.findIndex(a => a.id == editId);
+      if (idx !== -1) ads[idx] = { ...ads[idx], ...payload };
+    } else {
+      payload.id = Date.now();
+      ads.unshift(payload);
+    }
+
+    saveAds(ads);
+    resetForm();
+    renderDashboard();
+    alert('বিজ্ঞাপনের হিসাব সফলভাবে সংরক্ষিত হয়েছে!');
+  });
+
+  // এডিট বাটনে ক্লিক করার সময় পাসওয়ার্ড ভেরিফিকেশন
+  function editAd(id) {
+    if (!verifyCurrentAccountPassword()) return;
+
+    const ads = getAds();
+    const ad = ads.find(a => a.id === id);
+    if (!ad) return;
+
+    document.getElementById('edit-id').value = ad.id;
+    document.getElementById('billNo').value = ad.billNo;
+    document.getElementById('clientName').value = ad.clientName;
+    document.getElementById('mediaSource').value = ad.mediaSource || '';
+    document.getElementById('status').value = ad.status || 'unpaid/due';
+
+    const mode = ad.mode || 'offline';
+    document.querySelector(`input[name="adMode"][value="${mode}"]`).checked = true;
+    handleModeChange();
+
+    if (mode === 'offline') {
+      document.getElementById('printDate').value = ad.printDate || '';
+      document.getElementById('memoNo').value = ad.memoNo || '';
+      document.getElementById('memoDate').value = ad.memoDate || '';
+      document.getElementById('paperAge').value = ad.paperAge || '';
+      document.getElementById('paperIssue').value = ad.paperIssue || '';
+      document.getElementById('colSize').value = ad.colSize || '';
+      document.getElementById('inchSize').value = ad.inchSize || '';
+      document.getElementById('ratePerInch').value = ad.ratePerInch || '';
+    } else {
+      document.getElementById('onlineStartDate').value = ad.onlineStartDate || '';
+      document.getElementById('onlineEndDate').value = ad.onlineEndDate || '';
+      document.getElementById('onlineSlot').value = ad.onlineSlot;
+      document.getElementById('displayWebSize').innerText = ad.webSize;
+      document.getElementById('displayMobSize').innerText = ad.mobSize;
+      document.getElementById('onlineTargetUrl').value = ad.onlineTargetUrl || '';
+      document.getElementById('onlineBasePrice').value = ad.onlineBasePrice || '';
+    }
+
+    if (ad.status === 'paid') {
+      document.getElementById('paidAmountWrapper').style.display = 'none';
+      document.getElementById('paidAmount').value = '';
+    } else {
+      document.getElementById('paidAmountWrapper').style.display = 'block';
+      document.getElementById('paidAmount').value = ad.paidAmount;
+    }
+
+    calculateBill();
+    document.getElementById('form-title').innerText = "বিজ্ঞাপন বিল সংশোধন";
+    document.getElementById('save-btn').innerText = "আপডেট করুন";
+    document.getElementById('cancel-btn').style.display = "block";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ডিলিট করার সময় পাসওয়ার্ড ভেরিফিকেশন
+  function deleteAd(id) {
+    if (!verifyCurrentAccountPassword()) return;
+
+    if (confirm('আপনি কি এই বিজ্ঞাপনের হিসাবটি তালিকা থেকে মুছতে চান?')) {
+      let ads = getAds();
+      ads = ads.filter(a => a.id !== id);
+      saveAds(ads);
+      renderDashboard();
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('adForm').reset();
+    document.getElementById('edit-id').value = '';
+    document.getElementById('form-title').innerText = "বিজ্ঞাপন বিলিং এন্ট্রি ফর্ম";
+    document.getElementById('save-btn').innerText = "বিল সংরক্ষণ করুন";
+    document.getElementById('cancel-btn').style.display = "none";
+    document.querySelector('input[name="adMode"][value="offline"]').checked = true;
+    handleModeChange();
+    togglePaidInput();
+  }
+
+  // ১. নির্দিষ্ট একক ইনভয়েস প্রিন্ট
+  function printReceipt(id) {
+    const ads = getAds();
+    const ad = ads.find(a => a.id === id);
+    if (!ad) return;
+
+    let statusText = 'UNPAID / DUE';
+    const stampContainer = document.getElementById('inv-stamp-container');
+    stampContainer.innerHTML = '';
+
+    if (ad.status === 'paid') {
+      statusText = 'PAID (পরিশোধিত)';
+      stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID</div>`;
+    } else if (ad.status === 'unpaid/due') {
+      statusText = 'UNPAID / DUE (বকেয়া)';
+      stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">DELIVERED</div>`;
+    } else {
+      statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
+    }
+
+    const isOnline = (ad.mode === 'online');
+
+    document.getElementById('inv-bill-no').innerText = ad.billNo;
+    document.getElementById('inv-print-date').innerText = isOnline ? (ad.onlineStartDate || '-') : (ad.printDate || '-');
+    document.getElementById('inv-client-name').innerText = ad.clientName;
+    document.getElementById('inv-ad-mode').innerText = isOnline ? 'অনলাইন ডিজিটাল পোর্টাল বিজ্ঞাপন' : 'জাতীয় দৈনিক প্রিন্ট পত্রিকা বিজ্ঞাপন';
+    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / প্রযোজ্য নয়';
+    document.getElementById('inv-status').innerText = statusText;
+
+    if (isOnline) {
+      document.getElementById('inv-memo-line').style.display = 'none';
+      document.getElementById('inv-paper-age-line').style.display = 'none';
+      document.getElementById('inv-paper-issue-line').style.display = 'none';
+      document.getElementById('inv-vat-label').innerText = 'ভ্যাট / ট্যাক্স (০%):';
+
+      document.getElementById('inv-item-desc').innerHTML = `
+        <strong>${ad.onlineSlot}</strong><br>
+        <small style="color:#555;">প্রচারকাল: ${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}</small>
+      `;
+      document.getElementById('inv-item-dimensions').innerHTML = `
+        💻 Web: ${ad.webSize}<br>
+        📱 Mob: ${ad.mobSize}
+      `;
+      document.getElementById('inv-item-rate').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
+    } else {
+      document.getElementById('inv-memo-line').style.display = 'block';
+      document.getElementById('inv-paper-age-line').style.display = 'block';
+      document.getElementById('inv-paper-issue-line').style.display = 'block';
+      document.getElementById('inv-vat-label').innerText = 'সরকারি ভ্যাট / ট্যাক্স (১৫%):';
+
+      document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
+      document.getElementById('inv-memo-date').innerText = ad.memoDate || 'প্রযোজ্য নয়';
+      document.getElementById('inv-paper-age').innerText = ad.paperAge || '-';
+      document.getElementById('inv-paper-issue').innerText = ad.paperIssue || '-';
+
+      document.getElementById('inv-item-desc').innerHTML = `দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা<br><small style="color:#555;">নির্ধারিত কলাম ইঞ্চিতে প্রকাশিত</small>`;
+      document.getElementById('inv-item-dimensions').innerText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি (${ad.totalColInch} ইঞ্চি)`;
+      document.getElementById('inv-item-rate').innerText = `৳ ${ad.ratePerInch.toLocaleString()} / ইঞ্চি`;
+    }
+
+    document.getElementById('inv-base-price').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
+    document.getElementById('inv-sum-base').innerText = `৳ ${ad.basePrice.toLocaleString()}`;
+    document.getElementById('inv-sum-vat').innerText = `৳ ${ad.vat.toLocaleString()}`;
+    document.getElementById('inv-sum-total').innerText = `৳ ${ad.totalWithVat.toLocaleString()}`;
+    document.getElementById('inv-sum-paid').innerText = `৳ ${ad.paidAmount.toLocaleString()}`;
+    document.getElementById('inv-sum-due').innerText = `৳ ${ad.due.toLocaleString()}`;
+
+    document.body.className = 'printing-invoice';
+    window.print();
+  }
+
+  // ২. নির্দিষ্ট সময়সীমার সামারি স্টেটমেন্ট প্রিন্ট
+  function printDateRangeSummary() {
+    const ads = getAds();
+    const sDate = document.getElementById('filterStartDate').value;
+    const eDate = document.getElementById('filterEndDate').value;
+
+    const filtered = ads.filter(ad => {
+      const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
+      if (sDate && eDate) return (refDate >= sDate && refDate <= eDate);
+      if (sDate) return (refDate >= sDate);
+      if (eDate) return (refDate <= eDate);
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      alert('নির্বাচিত সময়সীমার মধ্যে কোনো বিজ্ঞাপনের হিসাব পাওয়া যায়নি!');
+      return;
+    }
+
+    let periodText = 'সকল তারিখের সামগ্রিক সামারি স্টেটমেন্ট';
+    if (sDate && eDate) periodText = `${sDate} হতে ${eDate} পর্যন্ত প্রচারের বিবরণী`;
+    else if (sDate) periodText = `${sDate} তারিখ থেকে পরবর্তী সকল বিবরণী`;
+    else if (eDate) periodText = `${eDate} তারিখ পর্যন্ত সকল বিবরণী`;
+
+    document.getElementById('summary-period-title').innerText = periodText;
+    document.getElementById('summary-print-date').innerText = new Date().toLocaleDateString('bn-BD');
+
+    let sumTotal = 0;
+    let sumPaid = 0;
+    let sumDue = 0;
+
+    const tbody = document.getElementById('summaryTableBody');
+    tbody.innerHTML = '';
+
+    filtered.forEach((ad, i) => {
+      sumTotal += Number(ad.totalWithVat);
+      sumPaid += Number(ad.paidAmount);
+      sumDue += Number(ad.due);
+
+      const isOnline = (ad.mode === 'online');
+      let details = '';
+      let dateText = '';
+
+      if (isOnline) {
+        details = `<strong>${ad.onlineSlot}</strong><br><small>💻 ${ad.webSize} | 📱 ${ad.mobSize}</small>`;
+        dateText = `${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}`;
+      } else {
+        details = `${ad.colSize}×${ad.inchSize} (${ad.totalColInch}")`;
+        dateText = ad.printDate || '-';
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="text-align: center;">${i + 1}</td>
+        <td>${dateText}</td>
+        <td>${ad.billNo}</td>
+        <td>
+          <span class="mode-badge ${isOnline ? 'badge-online' : 'badge-offline'}">${isOnline ? 'অনলাইন' : 'প্রিন্ট'}</span><br>
+          ${ad.clientName} <small style="color:#555;">(${ad.mediaSource || 'সরাসরি'})</small>
+        </td>
+        <td>${details}</td>
+        <td style="text-align: right;">৳${ad.basePrice.toLocaleString()}</td>
+        <td style="text-align: right; font-weight:bold;">৳${ad.totalWithVat.toLocaleString()}</td>
+        <td style="text-align: right; color:green;">৳${ad.paidAmount.toLocaleString()}</td>
+        <td style="text-align: right; color:red; font-weight:bold;">৳${ad.due.toLocaleString()}</td>
+        <td style="text-align: center; font-weight:bold; text-transform: uppercase;">${ad.status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('sum-count').innerText = `${filtered.length} টি`;
+    document.getElementById('sum-total-bill').innerText = `৳ ${sumTotal.toLocaleString()}`;
+    document.getElementById('sum-paid-bill').innerText = `৳ ${sumPaid.toLocaleString()}`;
+    document.getElementById('sum-due-bill').innerText = `৳ ${sumDue.toLocaleString()}`;
+
+    document.body.className = 'printing-summary';
+    window.print();
+  }
+
+  // ইনিশিয়ালাইজেশন
+  getUsers();
+  checkAuth();
+  handleModeChange();
+  togglePaidInput();
+</script>
+
+</body>
+</html>
