@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ভোরের বাণী - বিজ্ঞাপন বিলিং ও হিসাব রেজিস্টার</title>
   
-  <!-- Favorites Icon (Favicon) -->
   <link rel="icon" type="image/svg+xml" href="Elogo.svg">
   
-  <!-- Firebase App & Realtime Database SDKs (Compat Version) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -38,7 +36,6 @@
       padding: 16px;
     }
 
-    /* লগইন পেজ স্টাইল */
     #login-screen {
       position: fixed;
       top: 0;
@@ -114,7 +111,6 @@
     }
     .btn-login:hover { background: #991b1b; }
 
-    /* ড্যাশবোর্ড হেডার */
     .container {
       max-width: 1400px;
       margin: 0 auto;
@@ -171,7 +167,6 @@
       border-color: #fca5a5 !important;
     }
 
-    /* অবতার স্টাইল */
     .header-avatar {
       width: 34px;
       height: 34px;
@@ -208,7 +203,6 @@
       object-fit: cover;
     }
 
-    /* মেট্রিক্স কার্ড */
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -240,7 +234,6 @@
     .text-blue { color: var(--accent); }
     .text-orange { color: var(--warning); }
 
-    /* অফলাইন ও অনলাইন আয়ের বক্স */
     .income-split-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -427,7 +420,7 @@
       align-items: flex-end;
     }
 
-    .date-input-wrap { flex: 1; min-width: 140px; }
+    .date-input-wrap { flex: 1; min-width: 130px; }
     .date-input-wrap label { margin-bottom: 2px; font-size: 11px; }
 
     .btn-date-filter {
@@ -456,6 +449,18 @@
 
     .btn-summary-print {
       background: #0284c7;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 35px;
+    }
+
+    .btn-status-print {
+      background: #b91c1c;
       color: white;
       border: none;
       padding: 8px 14px;
@@ -569,7 +574,6 @@
       margin-top: 2px;
     }
 
-    /* মোডাল উইন্ডো স্টাইল */
     .modal-backdrop {
       position: fixed;
       top: 0;
@@ -609,7 +613,6 @@
       color: #64748b;
     }
 
-    /* প্রিন্ট স্টাইলিং */
     #print-invoice-area, #print-summary-area {
       display: none;
     }
@@ -1101,9 +1104,18 @@
           <label>শেষের তারিখ</label>
           <input type="date" id="filterEndDate">
         </div>
+        <div class="date-input-wrap">
+          <label>নির্দিষ্ট স্ট্যাটাস প্রিন্ট</label>
+          <select id="printStatusSelect">
+            <option value="all">সকল বিজ্ঞাপন</option>
+            <option value="paid">পরিশোধিত (Paid)</option>
+            <option value="unpaid/due">বকেয়া (Unpaid / Due)</option>
+            <option value="on process">প্রক্রিয়াধীন (On Process)</option>
+          </select>
+        </div>
         <button class="btn-date-filter" onclick="applyDateFilter()">🔍 ফিল্টার</button>
         <button class="btn-date-clear" onclick="clearDateFilter()">রিসেট</button>
-        <button class="btn-summary-print" onclick="printDateRangeSummary()">📊 নির্দিষ্ট সময়ের সামারি প্রিন্ট</button>
+        <button class="btn-status-print" onclick="printFilteredStatusSummary()">🖨️ নির্বাচিত স্ট্যাটাস প্রিন্ট</button>
       </div>
 
       <div class="filter-tabs">
@@ -1406,6 +1418,40 @@
 </div>
 
 <script>
+  // Google Apps Script Webhook URL (এখানে আপনার গুগল স্ক্রিপ্টের URL বসিয়ে দিন)
+  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwAIEyQaeC_S4QtjxPUkUDQi5-2pYjEFbvyy8Hvbha-xJ5yd4PkSLIUzId3DT_RfeScMw/exec";
+
+  // Google Sheets-এ ডাটা পুশ করার হেল্পার
+  function syncToGoogleSheet(adPayload) {
+    if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+      return; // URL কনফিগার না থাকলে ইগনোর করবে
+    }
+
+    const payload = {
+      date: (adPayload.mode === 'online') ? (adPayload.onlineStartDate || '') : (adPayload.printDate || ''),
+      billNo: adPayload.billNo,
+      mode: adPayload.mode,
+      clientName: adPayload.clientName,
+      mediaSource: adPayload.mediaSource,
+      dimension: (adPayload.mode === 'online') 
+        ? `${adPayload.onlineSlot} (W:${adPayload.webSize || ''} M:${adPayload.mobSize || ''})`
+        : `${adPayload.colSize || 0}x${adPayload.inchSize || 0} (${adPayload.totalColInch || 0} Col-Inch)`,
+      basePrice: adPayload.basePrice,
+      vat: adPayload.vat,
+      totalWithVat: adPayload.totalWithVat,
+      paidAmount: adPayload.paidAmount,
+      due: adPayload.due,
+      status: adPayload.status
+    };
+
+    fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(err => console.log("Google Sheets Sync Error:", err));
+  }
+
   // Firebase কনফিগারেশন
   const firebaseConfig = {
     apiKey: "AIzaSyAikR4KcImPRFbb4XIcg5jSgkaVoSNZMDQ",
@@ -1418,7 +1464,6 @@
     measurementId: "G-EDV5B8M4ZF"
   };
 
-  // Firebase ইনিশিয়ালাইজেশন
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const adsRef = db.ref('advertisements');
@@ -1434,13 +1479,12 @@
   let adsList = [];
   let usersList = [];
 
-  // ইমেজ সাইজ চেকিং ও Base64 কনভার্সন ফাংশন
   function previewImageFile(input, previewImgId, hiddenInputId) {
     const file = input.files[0];
     if (!file) return;
 
     if (file.size > 200 * 1024) {
-      alert("ছবির সাইজ খুব বড়! দয়া করে ২০০ KB এর কম সাইজের ছবি আপলোড করুন। (প্রস্তাবিত মাপ: 150x150 থেকে 300x300 px)");
+      alert("ছবির সাইজ খুব বড়! দয়া করে ২০০ KB এর কম সাইজের ছবি আপলোড করুন।");
       input.value = '';
       return;
     }
@@ -1453,7 +1497,6 @@
     reader.readAsDataURL(file);
   }
 
-  // ফায়ারবেস থেকে রিয়েলটাইম ইউজার সিন্ক
   usersRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
@@ -1481,7 +1524,6 @@
     renderUserList();
   });
 
-  // ফায়ারবেস থেকে রিয়েলটাইম বিজ্ঞাপন ডেটা সিন্ক
   adsRef.on('value', (snapshot) => {
     const data = snapshot.val();
     adsList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : [];
@@ -1509,7 +1551,6 @@
     return false;
   }
 
-  // লগইন
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -1554,7 +1595,6 @@
     }
   }
 
-  // ইউজার ম্যানেজমেন্ট
   function openUserModal() {
     const sessionUser = getActiveSession();
     if (!sessionUser || !sessionUser.isSuper) {
@@ -1659,7 +1699,6 @@
     }
   }
 
-  // প্রোফাইল এডিট
   function openProfileModal() {
     const sessionUser = getActiveSession();
     if (!sessionUser) return;
@@ -2002,7 +2041,11 @@
       updates.due = 0;
     }
 
-    adsRef.child(id).update(updates);
+    adsRef.child(id).update(updates, (err) => {
+      if (!err) {
+        syncToGoogleSheet({ ...target, ...updates });
+      }
+    });
   }
 
   // বিল ফর্ম সংরক্ষণ
@@ -2060,15 +2103,17 @@
     if (editId) {
       adsRef.child(editId).update(payload, (err) => {
         if (!err) {
+          syncToGoogleSheet(payload);
           resetForm();
-          alert('বিজ্ঞাপনের হিসাব সফলভাবে আপডেট হয়েছে!');
+          alert('বিজ্ঞাপনের হিসাব সফলভাবে আপডেট হয়েছে ও গুগল শিটে সিঙ্ক হয়েছে!');
         }
       });
     } else {
       adsRef.push(payload, (err) => {
         if (!err) {
+          syncToGoogleSheet(payload);
           resetForm();
-          alert('বিজ্ঞাপনের হিসাব সফলভাবে সংরক্ষিত হয়েছে!');
+          alert('বিজ্ঞাপনের হিসাব সফলভাবে সংরক্ষিত হয়েছে ও গুগল শিটে সিঙ্ক হয়েছে!');
         }
       });
     }
@@ -2143,7 +2188,6 @@
     togglePaidInput();
   }
 
-  // একক ইনভয়েস প্রিন্ট
   function printReceipt(id) {
     const ad = adsList.find(a => a.id === id);
     if (!ad) return;
@@ -2213,28 +2257,38 @@
     window.print();
   }
 
-  // নির্দিষ্ট সময়সীমার সামারি স্টেটমেন্ট প্রিন্ট
-  function printDateRangeSummary() {
+  // Paid, Unpaid, On Process আলাদাভাবে সামারি প্রিন্ট করার ফাংশন
+  function printFilteredStatusSummary() {
+    const selectedStatus = document.getElementById('printStatusSelect').value;
     const sDate = document.getElementById('filterStartDate').value;
     const eDate = document.getElementById('filterEndDate').value;
 
     const filtered = adsList.filter(ad => {
+      const matchStatus = (selectedStatus === 'all') || (ad.status === selectedStatus);
       const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
-      if (sDate && eDate) return (refDate >= sDate && refDate <= eDate);
-      if (sDate) return (refDate >= sDate);
-      if (eDate) return (refDate <= eDate);
-      return true;
+      let matchDate = true;
+
+      if (sDate && eDate) matchDate = (refDate >= sDate && refDate <= eDate);
+      else if (sDate) matchDate = (refDate >= sDate);
+      else if (eDate) matchDate = (refDate <= eDate);
+
+      return matchStatus && matchDate;
     });
 
     if (filtered.length === 0) {
-      alert('নির্বাচিত সময়সীমার মধ্যে কোনো বিজ্ঞাপনের হিসাব পাওয়া যায়নি!');
+      alert('নির্বাচিত শর্ত অনুযায়ী কোনো বিজ্ঞাপনের তথ্য পাওয়া যায়নি!');
       return;
     }
 
-    let periodText = 'সকল তারিখের সামগ্রিক সামারি স্টেটমেন্ট';
-    if (sDate && eDate) periodText = `${sDate} হতে ${eDate} পর্যন্ত প্রচারের বিবরণী`;
-    else if (sDate) periodText = `${sDate} তারিখ থেকে পরবর্তী সকল বিবরণী`;
-    else if (eDate) periodText = `${eDate} তারিখ পর্যন্ত সকল বিবরণী`;
+    let statusLabel = 'সকল বিজ্ঞাপন';
+    if (selectedStatus === 'paid') statusLabel = 'পরিশোধিত (Paid)';
+    else if (selectedStatus === 'unpaid/due') statusLabel = 'বকেয়া (Unpaid / Due)';
+    else if (selectedStatus === 'on process') statusLabel = 'প্রক্রিয়াধীন (On Process)';
+
+    let periodText = `রিপোর্ট টাইপ: ${statusLabel}`;
+    if (sDate && eDate) periodText += ` | সময়কাল: ${sDate} হতে ${eDate}`;
+    else if (sDate) periodText += ` | সময়কাল: ${sDate} থেকে পরবর্তী`;
+    else if (eDate) periodText += ` | সময়কাল: ${eDate} পর্যন্ত`;
 
     document.getElementById('summary-period-title').innerText = periodText;
     document.getElementById('summary-print-date').innerText = new Date().toLocaleDateString('bn-BD');
@@ -2291,7 +2345,6 @@
     window.print();
   }
 
-  // প্রারম্ভিক কল
   checkAuth();
   handleModeChange();
   togglePaidInput();
