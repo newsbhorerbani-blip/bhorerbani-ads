@@ -447,18 +447,6 @@
       height: 35px;
     }
 
-    .btn-summary-print {
-      background: #0284c7;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      height: 35px;
-    }
-
     .btn-status-print {
       background: #b91c1c;
       color: white;
@@ -470,6 +458,19 @@
       cursor: pointer;
       height: 35px;
     }
+
+    .btn-export-csv {
+      background: #15803d;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 35px;
+    }
+    .btn-export-csv:hover { background: #166534; }
 
     .filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
 
@@ -1105,7 +1106,7 @@
           <input type="date" id="filterEndDate">
         </div>
         <div class="date-input-wrap">
-          <label>নির্দিষ্ট স্ট্যাটাস প্রিন্ট</label>
+          <label>নির্দিষ্ট স্ট্যাটাস প্রিন্ট / এক্সপোর্ট</label>
           <select id="printStatusSelect">
             <option value="all">সকল বিজ্ঞাপন</option>
             <option value="paid">পরিশোধিত (Paid)</option>
@@ -1116,6 +1117,8 @@
         <button class="btn-date-filter" onclick="applyDateFilter()">🔍 ফিল্টার</button>
         <button class="btn-date-clear" onclick="clearDateFilter()">রিসেট</button>
         <button class="btn-status-print" onclick="printFilteredStatusSummary()">🖨️ নির্বাচিত স্ট্যাটাস প্রিন্ট</button>
+        <!-- এক্সেল / CSV ডাউনলোড বাটন -->
+        <button class="btn-export-csv" onclick="exportToCSV()">📥 এক্সেল / CSV ডাউনলোড</button>
       </div>
 
       <div class="filter-tabs">
@@ -1418,13 +1421,11 @@
 </div>
 
 <script>
-  // Google Apps Script Webhook URL (এখানে আপনার গুগল স্ক্রিপ্টের URL বসিয়ে দিন)
-  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwAIEyQaeC_S4QtjxPUkUDQi5-2pYjEFbvyy8Hvbha-xJ5yd4PkSLIUzId3DT_RfeScMw/exec";
+  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyI9g11s_Pw_5bWp2k7DgmqukUGONqUWmfB9UI_OpslB_PI_KcuDsiOkCxwS2n1p8TQww/exec";
 
-  // Google Sheets-এ ডাটা পুশ করার হেল্পার
   function syncToGoogleSheet(adPayload) {
     if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-      return; // URL কনফিগার না থাকলে ইগনোর করবে
+      return;
     }
 
     const payload = {
@@ -1450,6 +1451,83 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }).catch(err => console.log("Google Sheets Sync Error:", err));
+  }
+
+  // ব্রাউজার থেকে সরাসরি CSV/Excel ডাউনলোড ফাংশন
+  function exportToCSV() {
+    const selectedStatus = document.getElementById('printStatusSelect').value;
+    const sDate = document.getElementById('filterStartDate').value;
+    const eDate = document.getElementById('filterEndDate').value;
+
+    const filtered = adsList.filter(ad => {
+      const matchStatus = (selectedStatus === 'all') || (ad.status === selectedStatus);
+      const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
+      let matchDate = true;
+
+      if (sDate && eDate) matchDate = (refDate >= sDate && refDate <= eDate);
+      else if (sDate) matchDate = (refDate >= sDate);
+      else if (eDate) matchDate = (refDate <= eDate);
+
+      return matchStatus && matchDate;
+    });
+
+    if (filtered.length === 0) {
+      alert('এক্সপোর্ট করার মতো কোনো বিজ্ঞাপনের তথ্য পাওয়া যায়নি!');
+      return;
+    }
+
+    // CSV হেডার
+    const headers = [
+      "ক্রমিক", "তারিখ", "বিল নং", "বিজ্ঞাপনের ধরন", "ক্লায়েন্ট / প্রতিষ্ঠান",
+      "মাধ্যম", "মাপ / স্লট বিবরণী", "মূল মূল্য (৳)", "ভ্যাট (৳)", "সর্বমোট বিল (৳)",
+      "পরিশোধিত জমা (৳)", "বকেয়া (৳)", "পেমেন্ট স্ট্যাটাস"
+    ];
+
+    const rows = [headers];
+
+    filtered.forEach((ad, idx) => {
+      const isOnline = (ad.mode === 'online');
+      const dateVal = isOnline 
+        ? `${ad.onlineStartDate || ''} to ${ad.onlineEndDate || ''}` 
+        : (ad.printDate || '');
+      const typeVal = isOnline ? "অনলাইন" : "প্রিন্ট";
+      const dimVal = isOnline 
+        ? `${ad.onlineSlot} (W:${ad.webSize} M:${ad.mobSize})` 
+        : `${ad.colSize}x${ad.inchSize} (${ad.totalColInch} Col-Inch)`;
+
+      rows.push([
+        idx + 1,
+        dateVal,
+        ad.billNo || '',
+        typeVal,
+        ad.clientName || '',
+        ad.mediaSource || 'সরাসরি',
+        dimVal,
+        ad.basePrice || 0,
+        ad.vat || 0,
+        ad.totalWithVat || 0,
+        ad.paidAmount || 0,
+        ad.due || 0,
+        ad.status || ''
+      ]);
+    });
+
+    // CSV স্ট্রিং তৈরি (কমা এবং ডাবল কোট হ্যান্ডলিং)
+    const csvContent = "\uFEFF" + rows.map(e => 
+      e.map(item => `"${String(item).replace(/"/g, '""')}"`).join(",")
+    ).join("\r\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    let statusLabel = selectedStatus.replace('/', '_');
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bhorerbani_ads_${statusLabel}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   // Firebase কনফিগারেশন
@@ -2048,7 +2126,6 @@
     });
   }
 
-  // বিল ফর্ম সংরক্ষণ
   document.getElementById('adForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const editId = document.getElementById('edit-id').value;
@@ -2257,7 +2334,6 @@
     window.print();
   }
 
-  // Paid, Unpaid, On Process আলাদাভাবে সামারি প্রিন্ট করার ফাংশন
   function printFilteredStatusSummary() {
     const selectedStatus = document.getElementById('printStatusSelect').value;
     const sDate = document.getElementById('filterStartDate').value;
