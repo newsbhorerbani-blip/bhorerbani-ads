@@ -636,6 +636,7 @@
       display: none;
     }
 
+    /* প্রিন্ট স্টাইলিং */
     @media print {
       @page {
         size: A4 portrait;
@@ -1025,7 +1026,6 @@
       <button class="close-btn" onclick="closeForgotPasswordModal()">&times;</button>
     </div>
 
-    <!-- ধাপ ১: ইমেইল গ্রহণ ও কোড জিমেইলে প্রেরণ -->
     <div id="forgotStep1">
       <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাকাউন্টের নিবন্ধিত ইমেইলটি দিন। ওই ইমেইলে সরাসরি ৬-ডিজিটের একটি গোপন কোড (OTP) পাঠানো হবে।</p>
       <div class="form-group">
@@ -1035,7 +1035,6 @@
       <button class="btn btn-save" id="btnSendOtp" onclick="handleSendOTP()">ইমেইলে ওটিপি পাঠান</button>
     </div>
 
-    <!-- ধাপ ২: কোড ইনপুট ও ভেরিফাই -->
     <div id="forgotStep2" style="display: none;">
       <p style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:12px;">
         ✉️ আপনার ইমেইলে ওটিপি পাঠানো হয়েছে! অনুগ্রহ করে ইনবক্স অথবা স্প্যাম (Spam) ফোল্ডার চেক করুন।
@@ -1050,7 +1049,6 @@
       </div>
     </div>
 
-    <!-- ধাপ ৩: নতুন পাসওয়ার্ড সেট -->
     <div id="forgotStep3" style="display: none;">
       <p style="font-size:12px; color:#0f172a; margin-bottom:12px;">ইমেইল যাচাই সফল হয়েছে! আপনার নতুন পাসওয়ার্ড সেট করুন।</p>
       <div class="form-group">
@@ -1723,10 +1721,9 @@
   /* EMAILJS কনফিগারেশন */
   /* ---------------------------------------------------- */
   const EMAILJS_SERVICE_ID = "service_hu4darv";
-  const EMAILJS_TEMPLATE_ID = "template_rakf0oi";
+  const EMAILJS_TEMPLATE_ID = "7oxmbqc";
   const EMAILJS_PUBLIC_KEY = "vIAXWzABkqcccdL0I";
 
-  // EmailJS ইনিশিয়ালাইজেশন
   if (typeof emailjs !== 'undefined') {
     emailjs.init(EMAILJS_PUBLIC_KEY);
   }
@@ -1982,7 +1979,7 @@
   });
 
   /* ---------------------------------------------------- */
-  /* সরাসরি ইমেইলে OTP প্রেরণ ও ভেরিফিকেশন লজিক */
+  /* সরাসরি ইমেইলে OTP প্রেরণের লজিক */
   /* ---------------------------------------------------- */
   function openForgotPasswordModal() {
     document.getElementById('forgotPassModal').style.display = 'flex';
@@ -2026,13 +2023,17 @@
     sendBtn.innerText = "ইমেইল পাঠানো হচ্ছে...";
     sendBtn.disabled = true;
 
-    // EmailJS টেমপ্লেট ভ্যারিয়েবল
+    // টেমপ্লেট ভ্যারিয়েবল ম্যাপিং
     const templateParams = {
       to_email: email,
+      email: email,
+      user_email: email,
+      recipient: email,
+      reply_to: email,
       to_name: user.name || 'ব্যবহারকারী',
       passcode: generatedOTP,
       otp_code: generatedOTP,
-      message: `আপনার ভোরের বাণী বিজ্ঞাপন অ্যাকাউন্টের পাসওয়ার্ড রিসেট কোডটি হলো: ${generatedOTP}`
+      message: `আপনার ভোরের বাণী অ্যাকাউন্ট রিসেট ওটিপি কোড: ${generatedOTP}`
     };
 
     try {
@@ -2041,7 +2042,7 @@
       document.getElementById('forgotStep2').style.display = 'block';
     } catch (err) {
       console.error("EmailJS Error:", err);
-      alert('ইমেইল পাঠাতে সমস্যা হয়েছে: ' + (err.text || err.message || 'দয়া করে EmailJS সেটিংস যাচাই করুন'));
+      alert('ইমেইল পাঠাতে সমস্যা হয়েছে: ' + (err.text || err.message || 'EmailJS সেটিংস চেক করুন'));
     } finally {
       sendBtn.innerText = "ইমেইলে ওটিপি পাঠান";
       sendBtn.disabled = false;
@@ -2792,7 +2793,7 @@
 
       document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
 
-      // কিউআর কোড জেনারেশন (Standard Clean UTF-8 Format)
+      // কিউআর কোড জেনারেশন
       const qrContainer = document.getElementById('invoiceQrContainer');
       qrContainer.innerHTML = '';
       
