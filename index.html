@@ -9,6 +9,8 @@
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <!-- QR Code জেনারেটর লাইব্রেরি -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
@@ -634,13 +636,13 @@
       display: none;
     }
 
-    /* ----------------------------------------------- */
-    /* আধুনিক ও দৃষ্টিনন্দন A4 ইনভয়েস স্টাইলিং (PRINT STYLES) */
-    /* ----------------------------------------------- */
+    /* ---------------------------------------------------- */
+    /* আধুনিক, প্রফেশনাল ও ঝকঝকে A4 ইনভয়েস স্টাইলিং */
+    /* ---------------------------------------------------- */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 10mm 12mm 12mm 12mm;
+        margin: 10mm 12mm 10mm 12mm;
       }
 
       body {
@@ -674,7 +676,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 270mm;
+        min-height: 275mm;
         box-sizing: border-box;
       }
 
@@ -734,7 +736,7 @@
 
       .inv-info-cards {
         display: grid;
-        grid-template-columns: 1.2fr 1fr;
+        grid-template-columns: 1.25fr 1fr;
         gap: 12px;
         margin-bottom: 16px;
       }
@@ -782,7 +784,7 @@
         background: #1e293b !important;
         color: #ffffff !important;
         border: 1px solid #0f172a !important;
-        padding: 8px 10px;
+        padding: 9px 10px;
         font-size: 12px;
         font-weight: bold;
       }
@@ -812,20 +814,42 @@
         padding: 8px 12px;
         border-radius: 0 4px 4px 0;
         font-size: 11.5px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
+      }
+
+      .inv-interactive-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .qr-code-box {
+        border: 1px dashed #cbd5e1;
+        padding: 6px;
+        border-radius: 6px;
+        background: #ffffff;
+        text-align: center;
+      }
+
+      .qr-code-box span {
+        display: block;
+        font-size: 9.5px;
+        font-weight: bold;
+        color: #64748b;
+        margin-top: 4px;
       }
 
       .stamp-badge-wrap {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 10px;
       }
 
       .stamp-badge {
         display: inline-block;
         padding: 8px 24px;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 900;
         text-transform: uppercase;
         border-radius: 6px;
@@ -885,31 +909,77 @@
         color: #1e293b;
       }
 
-      .summary-table {
+      /* ------------------------------------------------ */
+      /* আধুনিক ও সুসজ্জিত আর্থিক সামারি স্টেটমেন্ট ডিজাইন */
+      /* ------------------------------------------------ */
+      .summary-header-box {
+        text-align: center;
+        border-bottom: 3px double #0f172a;
+        padding-bottom: 12px;
+        margin-bottom: 15px;
+      }
+
+      .summary-header-box h2 {
+        font-size: 20px;
+        margin: 4px 0 2px 0;
+        color: #0f172a;
+      }
+
+      .summary-cards-modern {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .sum-card-m {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 8px 12px;
+        background: #f8fafc;
+        text-align: center;
+      }
+
+      .sum-card-m.total { border-top: 4px solid #0284c7; }
+      .sum-card-m.paid { border-top: 4px solid #16a34a; }
+      .sum-card-m.due { border-top: 4px solid #dc2626; }
+      .sum-card-m.count { border-top: 4px solid #475569; }
+
+      .sum-card-m span {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 600;
+        display: block;
+      }
+
+      .sum-card-m strong {
+        font-size: 16px;
+        display: block;
+        margin-top: 4px;
+      }
+
+      .summary-table-modern {
         width: 100%;
         border-collapse: collapse;
         font-size: 11px;
-        margin-top: 15px;
       }
-      .summary-table th, .summary-table td {
-        border: 1px solid #000;
-        padding: 6px 8px;
+
+      .summary-table-modern th {
+        background: #0f172a !important;
+        color: #ffffff !important;
+        border: 1px solid #0f172a !important;
+        padding: 7px 6px;
         text-align: left;
       }
-      .summary-table th { background-color: #f2f2f2; }
 
-      .summary-cards-print {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-        margin-bottom: 20px;
-        gap: 10px;
+      .summary-table-modern td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 6px 8px;
+        vertical-align: middle;
       }
-      .summary-card-p {
-        border: 1px solid #000;
-        padding: 8px 12px;
-        flex: 1;
-        text-align: center;
+
+      .summary-table-modern tr:nth-child(even) {
+        background-color: #f8fafc !important;
       }
     }
   </style>
@@ -1445,7 +1515,7 @@
   </div>
 </div>
 
-<!-- আধুনিক ও প্রফেশনাল A4 ইনভয়েস পেজ (Official Invoice) -->
+<!-- আধুনিক ও প্রফেশনাল A4 ইনভয়েস পেজ (Official Invoice with QR Code) -->
 <div id="print-invoice-area">
   <div class="a4-page">
     <div>
@@ -1530,7 +1600,16 @@
             <strong>কথায় (In Words): </strong> <span id="inv-in-words">কথায় হিসাব প্রস্তুত হচ্ছে...</span>
           </div>
           
-          <div class="stamp-badge-wrap" id="inv-stamp-container"></div>
+          <div class="inv-interactive-row">
+            <!-- আসল কি না যাচাইয়ের QR Code বক্স -->
+            <div class="qr-code-box">
+              <div id="invoiceQrContainer"></div>
+              <span>🔍 স্ক্যান করে বিল যাচাই করুন</span>
+            </div>
+
+            <!-- সিল মোহর -->
+            <div class="stamp-badge-wrap" id="inv-stamp-container"></div>
+          </div>
         </div>
 
         <div class="inv-total-sheet">
@@ -1562,7 +1641,7 @@
 
     <div>
       <div style="font-size: 10px; color: #64748b; border-top: 1px dashed #cbd5e1; padding-top: 6px; margin-bottom: 25px;">
-        * এটি একটি কম্পিউটার জেনারেটেড ডিজিটাল ইনভয়েস বিল। যেকোনো প্রয়োজনে উপরে উল্লেখিত ফোন নাম্বারে যোগাযোগ করুন।
+        * এটি একটি কম্পিউটার জেনারেটেড ডিজিটাল ইনভয়েস বিল। বিলের সত্যতা যাচাই করতে উপরের QR কোডটি স্ক্যান করুন।
       </div>
       <div class="inv-footer-signatures">
         <div class="sign-box">
@@ -1580,41 +1659,42 @@
   </div>
 </div>
 
-<!-- আর্থিক সামারি রিপোর্ট পেজ -->
+<!-- আধুনিক ও সুসজ্জিত আর্থিক সামারি রিপোর্ট পেজ -->
 <div id="print-summary-area">
-  <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
-    <img src="logo.svg" alt="ভোরের বাণী" style="height:44px;" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'"><br>
-    <p style="margin: 4px 0 0 0; font-size: 13px;">বিজ্ঞাপন ও আয়-ব্যয় সামারি স্টেটমেন্ট (প্রিন্ট ও অনলাইন)</p>
-    <p style="margin: 3px 0 0 0; font-size: 12px; font-weight: bold;" id="summary-period-title">সময়কাল: সকল বিবরণী</p>
+  <div class="summary-header-box">
+    <img src="logo.svg" alt="ভোরের বাণী" style="height:46px;" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'"><br>
+    <h2>বিজ্ঞাপন আয়-ব্যয় ও বকেয়া আর্থিক সামারি স্টেটমেন্ট</h2>
+    <p style="margin: 2px 0 0 0; font-size: 11px; color:#475569;">দৈনিক ভোরের বাণী (প্রিন্ট সংবাদপত্র ও অনলাইন পোর্টাল)</p>
+    <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color:#b91c1c;" id="summary-period-title">সময়কাল: সকল বিবরণী</p>
   </div>
 
-  <div class="summary-cards-print">
-    <div class="summary-card-p">
-      <div style="font-size: 11px;">মোট বিজ্ঞাপন সংখ্যা</div>
-      <div style="font-size: 16px; font-weight: bold;" id="sum-count">0 টি</div>
+  <div class="summary-cards-modern">
+    <div class="sum-card-m count">
+      <span>বিজ্ঞাপন সংখ্যা</span>
+      <strong id="sum-count">0 টি</strong>
     </div>
-    <div class="summary-card-p">
-      <div style="font-size: 11px;">সর্বমোট বিল (ভ্যাটসহ)</div>
-      <div style="font-size: 16px; font-weight: bold;" id="sum-total-bill">৳ 0</div>
+    <div class="sum-card-m total">
+      <span>সর্বমোট বিল (ভ্যাটসহ)</span>
+      <strong style="color:#0284c7;" id="sum-total-bill">৳ 0</strong>
     </div>
-    <div class="summary-card-p">
-      <div style="font-size: 11px;">মোট আদায়কৃত জমা (Paid)</div>
-      <div style="font-size: 16px; font-weight: bold; color: green;" id="sum-paid-bill">৳ 0</div>
+    <div class="sum-card-m paid">
+      <span>মোট আদায়কৃত (Paid)</span>
+      <strong style="color:#16a34a;" id="sum-paid-bill">৳ 0</strong>
     </div>
-    <div class="summary-card-p">
-      <div style="font-size: 11px;">মোট বকেয়া (Due)</div>
-      <div style="font-size: 16px; font-weight: bold; color: red;" id="sum-due-bill">৳ 0</div>
+    <div class="sum-card-m due">
+      <span>মোট বকেয়া (Due)</span>
+      <strong style="color:#dc2626;" id="sum-due-bill">৳ 0</strong>
     </div>
   </div>
 
-  <table class="summary-table">
+  <table class="summary-table-modern">
     <thead>
       <tr>
         <th style="width: 4%; text-align: center;">ক্র:</th>
         <th>তারিখ</th>
         <th>বিল নং</th>
-        <th>মাধ্যম ও ক্লায়েন্ট</th>
-        <th>মাপ / বিবরণী (Web & Mob)</th>
+        <th>ক্লায়েন্ট ও মাধ্যম</th>
+        <th>বিজ্ঞাপন স্লট / সাইজ</th>
         <th style="text-align: right;">মূল্য</th>
         <th style="text-align: right;">মোট বিল</th>
         <th style="text-align: right;">জমা</th>
@@ -1626,9 +1706,11 @@
     </tbody>
   </table>
 
-  <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 12px;">
-    <div>রিপোর্ট তৈরির তারিখ: <span id="summary-print-date"></span></div>
-    <div style="border-top: 1px dashed #000; width: 180px; text-align: center; padding-top: 4px;">হিসাব রক্ষণ কর্মকর্তা / সম্পাদক</div>
+  <div style="margin-top: 45px; display: flex; justify-content: space-between; font-size: 11.5px;">
+    <div>রিপোর্ট প্রিন্ট সময়: <span id="summary-print-date"></span></div>
+    <div style="border-top: 1px dashed #000; width: 190px; text-align: center; padding-top: 4px; font-weight: bold;">
+      হিসাব প্রধান / সম্পাদক
+    </div>
   </div>
 </div>
 
@@ -1887,9 +1969,7 @@
     }
   });
 
-  /* ---------------------------------------------------- */
-  /* পাসওয়ার্ড রিসেট ও OTP হ্যান্ডলার লজিক (Password Reset) */
-  /* ---------------------------------------------------- */
+  /* পাসওয়ার্ড রিসেট ও OTP হ্যান্ডলার লজিক */
   function openForgotPasswordModal() {
     document.getElementById('forgotPassModal').style.display = 'flex';
     document.getElementById('forgotStep1').style.display = 'block';
@@ -1921,10 +2001,8 @@
     }
 
     targetUserForReset = user;
-    // ৬ ডিজিটের র্যান্ডম কোড জেনারেট
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // ওয়েব মেইল পাঠানোর ফ্রন্টএন্ড কল ও ব্যাকআপ অ্যালার্ট
     console.log(`Bhorer Bani OTP for ${email}: ${generatedOTP}`);
     alert(`[ভোরের বাণী নিরাপত্তা কোড]\n\nআপনার পাসওয়ার্ড রিসেট ওটিপি (OTP) কোডটি হলো: ${generatedOTP}\n\n(কোডটি ইনপুটে দিয়ে এগিয়ে যান)`);
 
@@ -2599,9 +2677,9 @@
     togglePaidInput();
   }
 
-  /* ------------------------------------------------ */
-  /* আধুনিক ও তথ্যবহুল ইনভয়েস জেনারেটর (Invoice Render) */
-  /* ------------------------------------------------ */
+  /* ---------------------------------------------------- */
+  /* আধুনিক ও তথ্যবহুল ইনভয়েস জেনারেটর (QR Code Verification) */
+  /* ---------------------------------------------------- */
   function printReceipt(id) {
     const ad = adsList.find(a => a.id === id);
     if (!ad) return;
@@ -2676,6 +2754,21 @@
     // কথায় মোট টাকার অঙ্ক জেনারেট
     document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
 
+    // কিউআর কোড জেনারেশন (বিল আসল কি না যাচাইয়ের জন্য)
+    const qrContainer = document.getElementById('invoiceQrContainer');
+    qrContainer.innerHTML = '';
+    
+    const verificationText = `দৈনিক ভোরের বাণী - অফিশিয়াল বিজ্ঞাপন বিল\nবিল নং: ${ad.billNo}\nপ্রতিষ্ঠান: ${ad.clientName}\nতারিখ: ${isOnline ? ad.onlineStartDate : ad.printDate}\nমোট বিল: ৳${totalVal}\nপরিশোধ: ৳${ad.paidAmount}\nবকেয়া: ৳${ad.due}\nস্ট্যাটাস: ${statusText}\n(যাচাইকৃত সত্য ও সঠিক)`;
+
+    new QRCode(qrContainer, {
+      text: verificationText,
+      width: 76,
+      height: 76,
+      colorDark: "#0f172a",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
     document.body.className = 'printing-invoice';
     window.print();
   }
@@ -2713,7 +2806,7 @@
     else if (eDate) periodText += ` | সময়কাল: ${eDate} পর্যন্ত`;
 
     document.getElementById('summary-period-title').innerText = periodText;
-    document.getElementById('summary-print-date').innerText = new Date().toLocaleDateString('bn-BD');
+    document.getElementById('summary-print-date').innerText = new Date().toLocaleString('bn-BD');
 
     let sumTotal = 0;
     let sumPaid = 0;
@@ -2732,28 +2825,30 @@
       let dateText = '';
 
       if (isOnline) {
-        details = `<strong>${ad.onlineSlot}</strong><br><small>💻 ${ad.webSize} | 📱 ${ad.mobSize}</small>`;
-        dateText = `${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}`;
+        details = `<strong>${ad.onlineSlot}</strong><br><small style="color:#64748b;">💻 ${ad.webSize} | 📱 ${ad.mobSize}</small>`;
+        dateText = `${ad.onlineStartDate || '-'}`;
       } else {
-        details = `${ad.colSize}×${ad.inchSize} (${ad.totalColInch}")`;
+        details = `${ad.colSize}×${ad.inchSize} (${ad.totalColInch} Col-Inch)`;
         dateText = ad.printDate || '-';
       }
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="text-align: center;">${i + 1}</td>
-        <td>${dateText}</td>
-        <td>${ad.billNo}</td>
+        <td style="text-align: center; font-weight:bold;">${i + 1}</td>
+        <td style="white-space: nowrap;">${dateText}</td>
+        <td><strong>${ad.billNo}</strong></td>
         <td>
           <span class="mode-badge ${isOnline ? 'badge-online' : 'badge-offline'}">${isOnline ? 'অনলাইন' : 'প্রিন্ট'}</span><br>
-          ${ad.clientName} <small style="color:#555;">(${ad.mediaSource || 'সরাসরি'})</small>
+          <strong>${ad.clientName}</strong> <small style="color:#64748b;">(${ad.mediaSource || 'সরাসরি'})</small>
         </td>
         <td>${details}</td>
         <td style="text-align: right;">৳${Number(ad.basePrice || 0).toLocaleString()}</td>
-        <td style="text-align: right; font-weight:bold;">৳${Number(ad.totalWithVat || 0).toLocaleString()}</td>
-        <td style="text-align: right; color:green;">৳${Number(ad.paidAmount || 0).toLocaleString()}</td>
-        <td style="text-align: right; color:red; font-weight:bold;">৳${Number(ad.due || 0).toLocaleString()}</td>
-        <td style="text-align: center; font-weight:bold; text-transform: uppercase;">${ad.status}</td>
+        <td style="text-align: right; font-weight:bold; color:#0284c7;">৳${Number(ad.totalWithVat || 0).toLocaleString()}</td>
+        <td style="text-align: right; color:#16a34a; font-weight:bold;">৳${Number(ad.paidAmount || 0).toLocaleString()}</td>
+        <td style="text-align: right; color:#dc2626; font-weight:bold;">৳${Number(ad.due || 0).toLocaleString()}</td>
+        <td style="text-align: center; font-weight:bold; text-transform: uppercase;">
+          <span class="status-select ${getStatusClass(ad.status)}">${ad.status}</span>
+        </td>
       `;
       tbody.appendChild(tr);
     });
