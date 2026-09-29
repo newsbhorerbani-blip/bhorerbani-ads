@@ -9,8 +9,6 @@
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <!-- QR Code জেনারেটর লাইব্রেরি -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
@@ -824,19 +822,27 @@
       }
 
       .qr-code-box {
-        border: 1px dashed #cbd5e1;
-        padding: 6px;
-        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        padding: 8px;
+        border-radius: 8px;
         background: #ffffff;
         text-align: center;
+        display: inline-block;
+      }
+
+      .qr-code-box img {
+        margin: 0 auto;
+        display: block;
+        width: 82px;
+        height: 82px;
       }
 
       .qr-code-box span {
         display: block;
-        font-size: 9.5px;
+        font-size: 10px;
         font-weight: bold;
-        color: #64748b;
-        margin-top: 4px;
+        color: #475569;
+        margin-top: 5px;
       }
 
       .stamp-badge-wrap {
@@ -909,9 +915,6 @@
         color: #1e293b;
       }
 
-      /* ------------------------------------------------ */
-      /* আধুনিক ও সুসজ্জিত আর্থিক সামারি স্টেটমেন্ট ডিজাইন */
-      /* ------------------------------------------------ */
       .summary-header-box {
         text-align: center;
         border-bottom: 3px double #0f172a;
@@ -1023,7 +1026,6 @@
       <button class="close-btn" onclick="closeForgotPasswordModal()">&times;</button>
     </div>
 
-    <!-- ধাপ ১: ইমেইল গ্রহণ ও ওটিপি প্রেরণ -->
     <div id="forgotStep1">
       <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাকাউন্টের নিবন্ধিত ইমেইলটি দিন। ওই ইমেইলে ৬-ডিজিটের একটি গোপন কোড (OTP) পাঠানো হবে।</p>
       <div class="form-group">
@@ -1033,7 +1035,6 @@
       <button class="btn btn-save" onclick="handleSendOTP()">ভেরিফিকেশন কোড পাঠান</button>
     </div>
 
-    <!-- ধাপ ২: ওটিপি প্রদান ও যাচাই -->
     <div id="forgotStep2" style="display: none;">
       <p style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:12px;">✅ আপনার ইমেইলে ৬ ডিজিটের কোড পাঠানো হয়েছে!</p>
       <div class="form-group">
@@ -1046,7 +1047,6 @@
       </div>
     </div>
 
-    <!-- ধাপ ৩: নতুন পাসওয়ার্ড সেট -->
     <div id="forgotStep3" style="display: none;">
       <p style="font-size:12px; color:#0f172a; margin-bottom:12px;">যাচাই সফল হয়েছে! আপনার নতুন পাসওয়ার্ড সেট করুন।</p>
       <div class="form-group">
@@ -1747,7 +1747,6 @@
     }).catch(err => console.log("Google Sheets Sync Error:", err));
   }
 
-  // সংখ্যা থেকে বাংলায় কথায় রূপান্তর ফাংশন
   function numberToBanglaWords(num) {
     if (!num || isNaN(num) || num === 0) return 'শূন্য টাকা মাত্র';
     num = Math.round(num);
@@ -1776,7 +1775,6 @@
     return words.trim() + ' টাকা মাত্র';
   }
 
-  // ব্রাউজার থেকে সরাসরি CSV/Excel ডাউনলোড ফাংশন
   function exportToCSV() {
     const selectedStatus = document.getElementById('printStatusSelect').value;
     const sDate = document.getElementById('filterStartDate').value;
@@ -1851,7 +1849,6 @@
     URL.revokeObjectURL(url);
   }
 
-  // Firebase কনফিগারেশন
   const firebaseConfig = {
     apiKey: "AIzaSyAikR4KcImPRFbb4XIcg5jSgkaVoSNZMDQ",
     authDomain: "bhorerbani-ads.firebaseapp.com",
@@ -1878,7 +1875,6 @@
   let adsList = [];
   let usersList = [];
 
-  // OTP রিসেট ভ্যারিয়েবল
   let generatedOTP = null;
   let targetUserForReset = null;
 
@@ -1969,7 +1965,6 @@
     }
   });
 
-  /* পাসওয়ার্ড রিসেট ও OTP হ্যান্ডলার লজিক */
   function openForgotPasswordModal() {
     document.getElementById('forgotPassModal').style.display = 'flex';
     document.getElementById('forgotStep1').style.display = 'block';
@@ -2678,188 +2673,233 @@
   }
 
   /* ---------------------------------------------------- */
-  /* আধুনিক ও তথ্যবহুল ইনভয়েস জেনারেটর (QR Code Verification) */
+  /* ১০০% ত্রুটিমুক্ত ইনভয়েস ও স্ট্যান্ডার্ড QR Code জেনারেটর */
   /* ---------------------------------------------------- */
   function printReceipt(id) {
-    const ad = adsList.find(a => a.id === id);
-    if (!ad) return;
+    try {
+      const ad = adsList.find(a => a.id === id);
+      if (!ad) {
+        alert('বিজ্ঞাপনের তথ্য খুঁজে পাওয়া যায়নি!');
+        return;
+      }
 
-    let statusText = 'UNPAID / DUE';
-    const stampContainer = document.getElementById('inv-stamp-container');
-    stampContainer.innerHTML = '';
+      let statusText = 'UNPAID / DUE';
+      const stampContainer = document.getElementById('inv-stamp-container');
+      stampContainer.innerHTML = '';
 
-    if (ad.status === 'paid') {
-      statusText = 'PAID (পরিশোধিত)';
-      stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID (পরিশোধিত)</div>`;
-    } else if (ad.status === 'unpaid/due') {
-      statusText = 'UNPAID / DUE (বকেয়া)';
-      stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">UNPAID / DUE</div>`;
-    } else {
-      statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
+      if (ad.status === 'paid') {
+        statusText = 'PAID (পরিশোধিত)';
+        stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID (পরিশোধিত)</div>`;
+      } else if (ad.status === 'unpaid/due') {
+        statusText = 'UNPAID / DUE (বকেয়া)';
+        stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">UNPAID / DUE</div>`;
+      } else {
+        statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
+      }
+
+      const isOnline = (ad.mode === 'online');
+
+      document.getElementById('inv-bill-no').innerText = ad.billNo || '-';
+      document.getElementById('inv-print-date').innerText = isOnline ? (ad.onlineStartDate || '-') : (ad.printDate || '-');
+      document.getElementById('inv-client-name').innerText = ad.clientName || '-';
+      document.getElementById('inv-ad-mode').innerText = isOnline ? 'অনলাইন ডিজিটাল পোর্টাল বিজ্ঞাপন' : 'জাতীয় দৈনিক প্রিন্ট পত্রিকা বিজ্ঞাপন';
+      document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / নিজস্ব';
+      document.getElementById('inv-status').innerText = statusText;
+
+      if (isOnline) {
+        document.getElementById('inv-memo-row').style.display = 'none';
+        document.getElementById('inv-memo-date-row').style.display = 'none';
+        document.getElementById('inv-paper-meta-row').style.display = 'none';
+        document.getElementById('inv-vat-label').innerText = 'ভ্যাট / ট্যাক্স (০%):';
+
+        document.getElementById('inv-item-desc').innerHTML = `
+          <strong style="color:#0f172a; font-size:13px;">${ad.onlineSlot}</strong><br>
+          <span style="font-size:11px; color:#475569;">প্রচারকাল: ${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}</span><br>
+          <span style="font-size:11px; color:#0284c7;">টার্গেট ইউআরএল: ${ad.onlineTargetUrl || 'প্রযোজ্য নয়'}</span>
+        `;
+        document.getElementById('inv-item-dimensions').innerHTML = `
+          💻 Web: ${ad.webSize || '-'}<br>
+          📱 Mob: ${ad.mobSize || '-'}
+        `;
+        document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
+      } else {
+        document.getElementById('inv-memo-row').style.display = 'flex';
+        document.getElementById('inv-memo-date-row').style.display = 'flex';
+        document.getElementById('inv-paper-meta-row').style.display = 'flex';
+        document.getElementById('inv-vat-label').innerText = 'সরকারি ভ্যাট / ট্যাক্স (১৫%):';
+
+        document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
+        document.getElementById('inv-memo-date').innerText = ad.memoDate || 'প্রযোজ্য নয়';
+        document.getElementById('inv-paper-age').innerText = ad.paperAge || '-';
+        document.getElementById('inv-paper-issue').innerText = ad.paperIssue || '-';
+
+        document.getElementById('inv-item-desc').innerHTML = `
+          <strong style="color:#0f172a; font-size:13px;">দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা</strong><br>
+          <span style="font-size:11px; color:#475569;">নির্ধারিত কলাম ইঞ্চির মাপ অনুযায়ী দৈনিক ভোরের বাণী পত্রিকায় প্রকাশিত</span>
+        `;
+        document.getElementById('inv-item-dimensions').innerText = `${ad.colSize || 0} কলাম × ${ad.inchSize || 0} ইঞ্চি (${ad.totalColInch || 0} কলাম-ইঞ্চি)`;
+        document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.ratePerInch || 0).toLocaleString()} / ইঞ্চি`;
+      }
+
+      const totalVal = Number(ad.totalWithVat || 0);
+
+      document.getElementById('inv-base-price').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
+      document.getElementById('inv-sum-base').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
+      document.getElementById('inv-sum-vat').innerText = `৳ ${Number(ad.vat || 0).toLocaleString()}`;
+      document.getElementById('inv-sum-total').innerText = `৳ ${totalVal.toLocaleString()}`;
+      document.getElementById('inv-sum-paid').innerText = `৳ ${Number(ad.paidAmount || 0).toLocaleString()}`;
+      document.getElementById('inv-sum-due').innerText = `৳ ${Number(ad.due || 0).toLocaleString()}`;
+
+      // কথায় টাকা
+      document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
+
+      // কিউআর কোড জেনারেশন (Standard Clean UTF-8 Format)
+      const qrContainer = document.getElementById('invoiceQrContainer');
+      qrContainer.innerHTML = '';
+      
+      const verificationText = `দৈনিক ভোরের বাণী - অফিশিয়াল বিজ্ঞাপন বিল
+বিল নং: ${ad.billNo}
+প্রতিষ্ঠান: ${ad.clientName}
+তারিখ: ${isOnline ? (ad.onlineStartDate || '') : (ad.printDate || '')}
+মোট বিল: ৳${totalVal}
+পরিশোধিত: ৳${ad.paidAmount || 0}
+বকেয়া: ৳${ad.due || 0}
+স্ট্যাটাস: ${statusText}
+ভেরিফিকেশন: আসল ও সঠিক`;
+
+      const encodedData = encodeURIComponent(verificationText);
+      const qrImg = new Image();
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedData}&charset-source=UTF-8&ecc=M`;
+      qrImg.alt = "QR Verification";
+      qrImg.style.width = "82px";
+      qrImg.style.height = "82px";
+      qrImg.style.display = "block";
+      qrImg.style.margin = "0 auto";
+      qrContainer.appendChild(qrImg);
+
+      document.body.className = 'printing-invoice';
+
+      const triggerPrint = () => {
+        window.print();
+        setTimeout(() => {
+          document.body.className = '';
+        }, 1000);
+      };
+
+      if (qrImg.complete) {
+        setTimeout(triggerPrint, 200);
+      } else {
+        qrImg.onload = () => setTimeout(triggerPrint, 200);
+        qrImg.onerror = () => setTimeout(triggerPrint, 200);
+      }
+
+    } catch (e) {
+      console.error("Print Error:", e);
+      alert('প্রিন্ট করতে সমস্যা হয়েছে: ' + e.message);
+      document.body.className = '';
     }
-
-    const isOnline = (ad.mode === 'online');
-
-    document.getElementById('inv-bill-no').innerText = ad.billNo;
-    document.getElementById('inv-print-date').innerText = isOnline ? (ad.onlineStartDate || '-') : (ad.printDate || '-');
-    document.getElementById('inv-client-name').innerText = ad.clientName;
-    document.getElementById('inv-ad-mode').innerText = isOnline ? 'অনলাইন ডিজিটাল পোর্টাল বিজ্ঞাপন' : 'জাতীয় দৈনিক প্রিন্ট পত্রিকা বিজ্ঞাপন';
-    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / নিজস্ব';
-    document.getElementById('inv-status').innerText = statusText;
-
-    if (isOnline) {
-      document.getElementById('inv-memo-row').style.display = 'none';
-      document.getElementById('inv-memo-date-row').style.display = 'none';
-      document.getElementById('inv-paper-meta-row').style.display = 'none';
-      document.getElementById('inv-vat-label').innerText = 'ভ্যাট / ট্যাক্স (০%):';
-
-      document.getElementById('inv-item-desc').innerHTML = `
-        <strong style="color:#0f172a; font-size:13px;">${ad.onlineSlot}</strong><br>
-        <span style="font-size:11px; color:#475569;">প্রচারকাল: ${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}</span><br>
-        <span style="font-size:11px; color:#0284c7;">টার্গেট ইউআরএল: ${ad.onlineTargetUrl || 'প্রযোজ্য নয়'}</span>
-      `;
-      document.getElementById('inv-item-dimensions').innerHTML = `
-        💻 Web: ${ad.webSize}<br>
-        📱 Mob: ${ad.mobSize}
-      `;
-      document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
-    } else {
-      document.getElementById('inv-memo-row').style.display = 'flex';
-      document.getElementById('inv-memo-date-row').style.display = 'flex';
-      document.getElementById('inv-paper-meta-row').style.display = 'flex';
-      document.getElementById('inv-vat-label').innerText = 'সরকারি ভ্যাট / ট্যাক্স (১৫%):';
-
-      document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
-      document.getElementById('inv-memo-date').innerText = ad.memoDate || 'প্রযোজ্য নয়';
-      document.getElementById('inv-paper-age').innerText = ad.paperAge || '-';
-      document.getElementById('inv-paper-issue').innerText = ad.paperIssue || '-';
-
-      document.getElementById('inv-item-desc').innerHTML = `
-        <strong style="color:#0f172a; font-size:13px;">দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা</strong><br>
-        <span style="font-size:11px; color:#475569;">নির্ধারিত কলাম ইঞ্চির মাপ অনুযায়ী দৈনিক ভোরের বাণী পত্রিকায় প্রকাশিত</span>
-      `;
-      document.getElementById('inv-item-dimensions').innerText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি (${ad.totalColInch} কলাম-ইঞ্চি)`;
-      document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.ratePerInch || 0).toLocaleString()} / ইঞ্চি`;
-    }
-
-    const totalVal = Number(ad.totalWithVat || 0);
-
-    document.getElementById('inv-base-price').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
-    document.getElementById('inv-sum-base').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
-    document.getElementById('inv-sum-vat').innerText = `৳ ${Number(ad.vat || 0).toLocaleString()}`;
-    document.getElementById('inv-sum-total').innerText = `৳ ${totalVal.toLocaleString()}`;
-    document.getElementById('inv-sum-paid').innerText = `৳ ${Number(ad.paidAmount || 0).toLocaleString()}`;
-    document.getElementById('inv-sum-due').innerText = `৳ ${Number(ad.due || 0).toLocaleString()}`;
-
-    // কথায় মোট টাকার অঙ্ক জেনারেট
-    document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
-
-    // কিউআর কোড জেনারেশন (বিল আসল কি না যাচাইয়ের জন্য)
-    const qrContainer = document.getElementById('invoiceQrContainer');
-    qrContainer.innerHTML = '';
-    
-    const verificationText = `দৈনিক ভোরের বাণী - অফিশিয়াল বিজ্ঞাপন বিল\nবিল নং: ${ad.billNo}\nপ্রতিষ্ঠান: ${ad.clientName}\nতারিখ: ${isOnline ? ad.onlineStartDate : ad.printDate}\nমোট বিল: ৳${totalVal}\nপরিশোধ: ৳${ad.paidAmount}\nবকেয়া: ৳${ad.due}\nস্ট্যাটাস: ${statusText}\n(যাচাইকৃত সত্য ও সঠিক)`;
-
-    new QRCode(qrContainer, {
-      text: verificationText,
-      width: 76,
-      height: 76,
-      colorDark: "#0f172a",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
-    });
-
-    document.body.className = 'printing-invoice';
-    window.print();
   }
 
   function printFilteredStatusSummary() {
-    const selectedStatus = document.getElementById('printStatusSelect').value;
-    const sDate = document.getElementById('filterStartDate').value;
-    const eDate = document.getElementById('filterEndDate').value;
+    try {
+      const selectedStatus = document.getElementById('printStatusSelect').value;
+      const sDate = document.getElementById('filterStartDate').value;
+      const eDate = document.getElementById('filterEndDate').value;
 
-    const filtered = adsList.filter(ad => {
-      const matchStatus = (selectedStatus === 'all') || (ad.status === selectedStatus);
-      const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
-      let matchDate = true;
+      const filtered = adsList.filter(ad => {
+        const matchStatus = (selectedStatus === 'all') || (ad.status === selectedStatus);
+        const refDate = (ad.mode === 'online') ? (ad.onlineStartDate || '') : (ad.printDate || '');
+        let matchDate = true;
 
-      if (sDate && eDate) matchDate = (refDate >= sDate && refDate <= eDate);
-      else if (sDate) matchDate = (refDate >= sDate);
-      else if (eDate) matchDate = (refDate <= eDate);
+        if (sDate && eDate) matchDate = (refDate >= sDate && refDate <= eDate);
+        else if (sDate) matchDate = (refDate >= sDate);
+        else if (eDate) matchDate = (refDate <= eDate);
 
-      return matchStatus && matchDate;
-    });
+        return matchStatus && matchDate;
+      });
 
-    if (filtered.length === 0) {
-      alert('নির্বাচিত শর্ত অনুযায়ী কোনো বিজ্ঞাপনের তথ্য পাওয়া যায়নি!');
-      return;
-    }
-
-    let statusLabel = 'সকল বিজ্ঞাপন';
-    if (selectedStatus === 'paid') statusLabel = 'পরিশোধিত (Paid)';
-    else if (selectedStatus === 'unpaid/due') statusLabel = 'বকেয়া (Unpaid / Due)';
-    else if (selectedStatus === 'on process') statusLabel = 'প্রক্রিয়াধীন (On Process)';
-
-    let periodText = `রিপোর্ট টাইপ: ${statusLabel}`;
-    if (sDate && eDate) periodText += ` | সময়কাল: ${sDate} হতে ${eDate}`;
-    else if (sDate) periodText += ` | সময়কাল: ${sDate} থেকে পরবর্তী`;
-    else if (eDate) periodText += ` | সময়কাল: ${eDate} পর্যন্ত`;
-
-    document.getElementById('summary-period-title').innerText = periodText;
-    document.getElementById('summary-print-date').innerText = new Date().toLocaleString('bn-BD');
-
-    let sumTotal = 0;
-    let sumPaid = 0;
-    let sumDue = 0;
-
-    const tbody = document.getElementById('summaryTableBody');
-    tbody.innerHTML = '';
-
-    filtered.forEach((ad, i) => {
-      sumTotal += Number(ad.totalWithVat || 0);
-      sumPaid += Number(ad.paidAmount || 0);
-      sumDue += Number(ad.due || 0);
-
-      const isOnline = (ad.mode === 'online');
-      let details = '';
-      let dateText = '';
-
-      if (isOnline) {
-        details = `<strong>${ad.onlineSlot}</strong><br><small style="color:#64748b;">💻 ${ad.webSize} | 📱 ${ad.mobSize}</small>`;
-        dateText = `${ad.onlineStartDate || '-'}`;
-      } else {
-        details = `${ad.colSize}×${ad.inchSize} (${ad.totalColInch} Col-Inch)`;
-        dateText = ad.printDate || '-';
+      if (filtered.length === 0) {
+        alert('নির্বাচিত শর্ত অনুযায়ী কোনো বিজ্ঞাপনের তথ্য পাওয়া যায়নি!');
+        return;
       }
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="text-align: center; font-weight:bold;">${i + 1}</td>
-        <td style="white-space: nowrap;">${dateText}</td>
-        <td><strong>${ad.billNo}</strong></td>
-        <td>
-          <span class="mode-badge ${isOnline ? 'badge-online' : 'badge-offline'}">${isOnline ? 'অনলাইন' : 'প্রিন্ট'}</span><br>
-          <strong>${ad.clientName}</strong> <small style="color:#64748b;">(${ad.mediaSource || 'সরাসরি'})</small>
-        </td>
-        <td>${details}</td>
-        <td style="text-align: right;">৳${Number(ad.basePrice || 0).toLocaleString()}</td>
-        <td style="text-align: right; font-weight:bold; color:#0284c7;">৳${Number(ad.totalWithVat || 0).toLocaleString()}</td>
-        <td style="text-align: right; color:#16a34a; font-weight:bold;">৳${Number(ad.paidAmount || 0).toLocaleString()}</td>
-        <td style="text-align: right; color:#dc2626; font-weight:bold;">৳${Number(ad.due || 0).toLocaleString()}</td>
-        <td style="text-align: center; font-weight:bold; text-transform: uppercase;">
-          <span class="status-select ${getStatusClass(ad.status)}">${ad.status}</span>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+      let statusLabel = 'সকল বিজ্ঞাপন';
+      if (selectedStatus === 'paid') statusLabel = 'পরিশোধিত (Paid)';
+      else if (selectedStatus === 'unpaid/due') statusLabel = 'বকেয়া (Unpaid / Due)';
+      else if (selectedStatus === 'on process') statusLabel = 'প্রক্রিয়াধীন (On Process)';
 
-    document.getElementById('sum-count').innerText = `${filtered.length} টি`;
-    document.getElementById('sum-total-bill').innerText = `৳ ${sumTotal.toLocaleString()}`;
-    document.getElementById('sum-paid-bill').innerText = `৳ ${sumPaid.toLocaleString()}`;
-    document.getElementById('sum-due-bill').innerText = `৳ ${sumDue.toLocaleString()}`;
+      let periodText = `রিপোর্ট টাইপ: ${statusLabel}`;
+      if (sDate && eDate) periodText += ` | সময়কাল: ${sDate} হতে ${eDate}`;
+      else if (sDate) periodText += ` | সময়কাল: ${sDate} থেকে পরবর্তী`;
+      else if (eDate) periodText += ` | সময়কাল: ${eDate} পর্যন্ত`;
 
-    document.body.className = 'printing-summary';
-    window.print();
+      document.getElementById('summary-period-title').innerText = periodText;
+      document.getElementById('summary-print-date').innerText = new Date().toLocaleString('bn-BD');
+
+      let sumTotal = 0;
+      let sumPaid = 0;
+      let sumDue = 0;
+
+      const tbody = document.getElementById('summaryTableBody');
+      tbody.innerHTML = '';
+
+      filtered.forEach((ad, i) => {
+        sumTotal += Number(ad.totalWithVat || 0);
+        sumPaid += Number(ad.paidAmount || 0);
+        sumDue += Number(ad.due || 0);
+
+        const isOnline = (ad.mode === 'online');
+        let details = '';
+        let dateText = '';
+
+        if (isOnline) {
+          details = `<strong>${ad.onlineSlot}</strong><br><small style="color:#64748b;">💻 ${ad.webSize} | 📱 ${ad.mobSize}</small>`;
+          dateText = `${ad.onlineStartDate || '-'}`;
+        } else {
+          details = `${ad.colSize}×${ad.inchSize} (${ad.totalColInch} Col-Inch)`;
+          dateText = ad.printDate || '-';
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center; font-weight:bold;">${i + 1}</td>
+          <td style="white-space: nowrap;">${dateText}</td>
+          <td><strong>${ad.billNo}</strong></td>
+          <td>
+            <span class="mode-badge ${isOnline ? 'badge-online' : 'badge-offline'}">${isOnline ? 'অনলাইন' : 'প্রিন্ট'}</span><br>
+            <strong>${ad.clientName}</strong> <small style="color:#64748b;">(${ad.mediaSource || 'সরাসরি'})</small>
+          </td>
+          <td>${details}</td>
+          <td style="text-align: right;">৳${Number(ad.basePrice || 0).toLocaleString()}</td>
+          <td style="text-align: right; font-weight:bold; color:#0284c7;">৳${Number(ad.totalWithVat || 0).toLocaleString()}</td>
+          <td style="text-align: right; color:#16a34a; font-weight:bold;">৳${Number(ad.paidAmount || 0).toLocaleString()}</td>
+          <td style="text-align: right; color:#dc2626; font-weight:bold;">৳${Number(ad.due || 0).toLocaleString()}</td>
+          <td style="text-align: center; font-weight:bold; text-transform: uppercase;">
+            <span class="status-select ${getStatusClass(ad.status)}">${ad.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('sum-count').innerText = `${filtered.length} টি`;
+      document.getElementById('sum-total-bill').innerText = `৳ ${sumTotal.toLocaleString()}`;
+      document.getElementById('sum-paid-bill').innerText = `৳ ${sumPaid.toLocaleString()}`;
+      document.getElementById('sum-due-bill').innerText = `৳ ${sumDue.toLocaleString()}`;
+
+      document.body.className = 'printing-summary';
+
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+          document.body.className = '';
+        }, 1000);
+      }, 300);
+
+    } catch (e) {
+      console.error("Summary Print Error:", e);
+      alert('সামারি প্রিন্ট করতে সমস্যা হয়েছে: ' + e.message);
+      document.body.className = '';
+    }
   }
 
   checkAuth();
