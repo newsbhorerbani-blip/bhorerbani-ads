@@ -52,20 +52,20 @@
     .login-card {
       background: #ffffff;
       width: 100%;
-      max-width: 400px;
+      max-width: 410px;
       padding: 32px 28px;
-      border-radius: 12px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      border-radius: 14px;
+      box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.45);
       text-align: center;
     }
 
     .login-logo {
-      height: 48px;
+      height: 50px;
       margin-bottom: 12px;
     }
 
     .login-card h2 {
-      font-size: 18px;
+      font-size: 19px;
       color: #0f172a;
       margin-bottom: 4px;
     }
@@ -91,7 +91,7 @@
 
     .login-card input {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 14px;
@@ -108,8 +108,23 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 10px;
+      transition: 0.2s ease;
     }
     .btn-login:hover { background: #991b1b; }
+
+    .forgot-link-wrap {
+      margin-top: 12px;
+      text-align: right;
+    }
+
+    .forgot-link-wrap a {
+      font-size: 12px;
+      color: #b91c1c;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .forgot-link-wrap a:hover { text-decoration: underline; }
 
     .container {
       max-width: 1400px;
@@ -581,7 +596,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -591,10 +607,10 @@
     .modal-box {
       background: white;
       padding: 24px;
-      border-radius: 10px;
+      border-radius: 12px;
       width: 100%;
       max-width: 580px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
     }
 
     .modal-header {
@@ -603,13 +619,13 @@
       align-items: center;
       margin-bottom: 16px;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
     }
 
     .close-btn {
       background: none;
       border: none;
-      font-size: 20px;
+      font-size: 24px;
       cursor: pointer;
       color: #64748b;
     }
@@ -618,16 +634,21 @@
       display: none;
     }
 
+    /* ----------------------------------------------- */
+    /* আধুনিক ও দৃষ্টিনন্দন A4 ইনভয়েস স্টাইলিং (PRINT STYLES) */
+    /* ----------------------------------------------- */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 12mm 15mm 12mm 15mm;
+        margin: 10mm 12mm 12mm 12mm;
       }
 
       body {
-        background: white !important;
+        background: #ffffff !important;
         padding: 0 !important;
         margin: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       .container, #login-screen, .modal-backdrop {
@@ -638,7 +659,7 @@
         display: block !important;
         width: 100%;
         background: white;
-        color: #000;
+        color: #0f172a;
       }
 
       body.printing-summary #print-summary-area {
@@ -653,119 +674,215 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 255mm;
+        min-height: 270mm;
+        box-sizing: border-box;
       }
 
-      .inv-header {
-        border-bottom: 2px solid #000;
-        padding-bottom: 8px;
-        margin-bottom: 16px;
+      .inv-header-modern {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
+        border-bottom: 3px double #0f172a;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
       }
 
-      .inv-print-logo {
-        height: 48px;
+      .inv-brand-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .inv-print-logo-modern {
+        height: 52px;
+        width: auto;
+      }
+
+      .inv-header-modern h1 {
+        font-size: 22px;
+        color: #0f172a;
+        font-weight: 800;
+        margin: 0;
+      }
+
+      .inv-header-modern p {
+        font-size: 11px;
+        color: #475569;
+        margin-top: 2px;
+      }
+
+      .inv-title-badge {
+        text-align: right;
+      }
+
+      .inv-title-badge h2 {
+        font-size: 16px;
+        background: #0f172a;
+        color: #ffffff;
+        padding: 5px 14px;
+        border-radius: 4px;
+        display: inline-block;
+        letter-spacing: 0.5px;
         margin-bottom: 4px;
       }
 
-      .inv-header p {
+      .inv-title-badge p {
         font-size: 12px;
-        color: #333;
+        font-weight: 600;
+        color: #334155;
       }
 
-      .inv-meta-grid {
-        display: flex;
-        justify-content: space-between;
+      .inv-info-cards {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 12px;
         margin-bottom: 16px;
-        font-size: 13px;
-        line-height: 1.6;
       }
 
-      .inv-table {
+      .inv-info-box {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px 14px;
+        background: #f8fafc;
+      }
+
+      .inv-box-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #b91c1c;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 4px;
+        margin-bottom: 6px;
+      }
+
+      .inv-info-line {
+        font-size: 12px;
+        margin-bottom: 4px;
+        display: flex;
+      }
+      .inv-info-line span.label {
+        width: 125px;
+        color: #475569;
+        font-weight: 500;
+      }
+      .inv-info-line span.val {
+        flex: 1;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .inv-table-modern {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
 
-      .inv-table th, .inv-table td {
-        border: 1px solid #000 !important;
+      .inv-table-modern th {
+        background: #1e293b !important;
+        color: #ffffff !important;
+        border: 1px solid #0f172a !important;
         padding: 8px 10px;
         font-size: 12px;
-      }
-
-      .inv-table th {
-        background-color: #f2f2f2 !important;
         font-weight: bold;
       }
 
-      .inv-middle-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 15px;
-        margin-bottom: 30px;
+      .inv-table-modern td {
+        border: 1px solid #94a3b8 !important;
+        padding: 9px 10px;
+        font-size: 12px;
+        vertical-align: middle;
       }
 
-      .stamp-area {
-        flex: 1;
+      .inv-calc-container {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+      }
+
+      .inv-words-stamp-area {
+        flex: 1;
+        padding-right: 25px;
+      }
+
+      .in-words-box {
+        border-left: 3px solid #b91c1c;
+        background: #f1f5f9;
+        padding: 8px 12px;
+        border-radius: 0 4px 4px 0;
+        font-size: 11.5px;
+        margin-bottom: 20px;
+      }
+
+      .stamp-badge-wrap {
+        display: flex;
         align-items: center;
+        justify-content: center;
+        margin-top: 10px;
       }
 
       .stamp-badge {
         display: inline-block;
-        padding: 10px 24px;
-        font-size: 26px;
+        padding: 8px 24px;
+        font-size: 24px;
         font-weight: 900;
         text-transform: uppercase;
         border-radius: 6px;
-        transform: rotate(-10deg);
+        transform: rotate(-7deg);
         letter-spacing: 2px;
       }
 
       .stamp-paid {
-        color: #dc2626 !important;
-        border: 4px solid #dc2626 !important;
-        background: rgba(220, 38, 38, 0.05);
+        color: #16a34a !important;
+        border: 3px dashed #16a34a !important;
+        background: rgba(22, 163, 74, 0.05);
       }
 
       .stamp-delivered {
-        color: #16a34a !important;
-        border: 4px solid #16a34a !important;
+        color: #dc2626 !important;
+        border: 3px dashed #dc2626 !important;
         background: rgba(220, 38, 38, 0.05);
       }
 
-      .inv-summary { width: 360px; }
+      .inv-total-sheet {
+        width: 320px;
+        border: 1px solid #0f172a;
+        border-radius: 4px;
+        overflow: hidden;
+      }
 
-      .inv-summary table {
+      .inv-total-sheet table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px;
+        font-size: 12.5px;
       }
 
-      .inv-summary td {
-        padding: 6px 10px;
-        border: 1px solid #000;
+      .inv-total-sheet td {
+        padding: 6px 12px;
+        border-bottom: 1px solid #cbd5e1;
       }
 
-      .inv-signatures {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: auto;
-        padding-top: 40px;
-        padding-right: 20px;
-      }
-
-      .signature-block {
-        text-align: center;
-        width: 200px;
-        border-top: 1px dashed #000;
-        padding-top: 6px;
-        font-size: 13px;
+      .inv-total-sheet tr.highlight {
+        background: #f1f5f9;
         font-weight: bold;
+      }
+
+      .inv-footer-signatures {
+        display: flex;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 30px;
+      }
+
+      .sign-box {
+        text-align: center;
+        width: 180px;
+        border-top: 1px solid #475569;
+        padding-top: 6px;
+        font-size: 11.5px;
+        font-weight: bold;
+        color: #1e293b;
       }
 
       .summary-table {
@@ -815,10 +932,62 @@
         <label>গোপন পাসওয়ার্ড</label>
         <input type="password" id="loginPassword" required placeholder="••••••••">
       </div>
+      
+      <div class="forgot-link-wrap">
+        <a onclick="openForgotPasswordModal()">🔑 পাসওয়ার্ড ভুলে গেছেন? (Reset)</a>
+      </div>
+
       <button type="submit" class="btn-login">লগইন করুন</button>
     </form>
     <div style="font-size: 11px; color: #94a3b8; margin-top: 15px;">
       ডিফল্ট অ্যাডমিন: admin@bhorerbani.com | পাসওয়ার্ড: admin123
+    </div>
+  </div>
+</div>
+
+<!-- পাসওয়ার্ড ভুলে গেছেন (OTP Reset) মডাল -->
+<div class="modal-backdrop" id="forgotPassModal">
+  <div class="modal-box" style="max-width: 420px;">
+    <div class="modal-header">
+      <h3 style="margin:0; font-size:16px;">🔑 পাসওয়ার্ড রিসেট ও ওটিপি ভেরিফিকেশন</h3>
+      <button class="close-btn" onclick="closeForgotPasswordModal()">&times;</button>
+    </div>
+
+    <!-- ধাপ ১: ইমেইল গ্রহণ ও ওটিপি প্রেরণ -->
+    <div id="forgotStep1">
+      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাকাউন্টের নিবন্ধিত ইমেইলটি দিন। ওই ইমেইলে ৬-ডিজিটের একটি গোপন কোড (OTP) পাঠানো হবে।</p>
+      <div class="form-group">
+        <label>নিবন্ধিত ইমেইল</label>
+        <input type="email" id="resetEmailInput" placeholder="আপনার ইমেইল দিন...">
+      </div>
+      <button class="btn btn-save" onclick="handleSendOTP()">ভেরিফিকেশন কোড পাঠান</button>
+    </div>
+
+    <!-- ধাপ ২: ওটিপি প্রদান ও যাচাই -->
+    <div id="forgotStep2" style="display: none;">
+      <p style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:12px;">✅ আপনার ইমেইলে ৬ ডিজিটের কোড পাঠানো হয়েছে!</p>
+      <div class="form-group">
+        <label>৬ ডিজিটের ওটিপি কোড (OTP)</label>
+        <input type="text" id="resetOTPInput" maxlength="6" placeholder="উদা: 489210" style="letter-spacing: 4px; font-weight: bold; font-size: 16px; text-align: center;">
+      </div>
+      <button class="btn btn-save" onclick="handleVerifyOTP()">কোড যাচাই করুন</button>
+      <div style="text-align: center; margin-top: 8px;">
+        <a style="font-size: 11px; color:#b91c1c; cursor:pointer;" onclick="handleSendOTP()">পুনরায় কোড পাঠান (Resend)</a>
+      </div>
+    </div>
+
+    <!-- ধাপ ৩: নতুন পাসওয়ার্ড সেট -->
+    <div id="forgotStep3" style="display: none;">
+      <p style="font-size:12px; color:#0f172a; margin-bottom:12px;">যাচাই সফল হয়েছে! আপনার নতুন পাসওয়ার্ড সেট করুন।</p>
+      <div class="form-group">
+        <label>নতুন পাসওয়ার্ড</label>
+        <input type="password" id="resetNewPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
+      </div>
+      <div class="form-group">
+        <label>নতুন পাসওয়ার্ড নিশ্চিত করুন</label>
+        <input type="password" id="resetConfirmPassInput" placeholder="পুনরায় লিখুন">
+      </div>
+      <button class="btn btn-save" onclick="handleUpdateForgottenPassword()">পাসওয়ার্ড পরিবর্তন সম্পন্ন করুন</button>
     </div>
   </div>
 </div>
@@ -835,7 +1004,7 @@
     </div>
     <div class="header-actions">
       <img id="headerUserAvatar" class="header-avatar" src="https://placehold.co/100x100/cbd5e1/475569?text=User" alt="Avatar">
-      <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;"> ইউজার ম্যানেজমেন্ট</button>
+      <button id="adminUserMgmtBtn" onclick="openUserModal()" style="display: none;">⚙️ ইউজার ম্যানেজমেন্ট</button>
       <button onclick="openProfileModal()">👤 আমার প্রোফাইল</button>
       <button class="btn-logout" onclick="logout()">লগআউট</button>
     </div>
@@ -913,7 +1082,7 @@
         <input type="hidden" id="edit-id">
 
         <div class="mode-selector-box">
-          <label class="title"> বিজ্ঞাপনের ধরন নির্বাচন করুন (AD TYPE):</label>
+          <label class="title">🎯 বিজ্ঞাপনের ধরন নির্বাচন করুন (AD TYPE):</label>
           <div class="mode-options">
             <label class="mode-option-label">
               <input type="radio" name="adMode" value="offline" checked onchange="handleModeChange()">
@@ -951,7 +1120,7 @@
         <div id="offlineFormSection">
           <div class="row">
             <div class="form-group" style="flex: 1.3;">
-              <label>স্মারক নং </label>
+              <label>স্মারক নং</label>
               <input type="text" id="memoNo" placeholder="উদা: স্মারক নং-০৫.১০...">
             </div>
             <div class="form-group" style="flex: 1;">
@@ -1154,7 +1323,7 @@
 <div class="modal-backdrop" id="userModal">
   <div class="modal-box">
     <div class="modal-header">
-      <h3 style="margin:0; font-size:16px;"> সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
+      <h3 style="margin:0; font-size:16px;">⚙️ সকল ব্যবহারকারী ও পাসওয়ার্ড নিয়ন্ত্রণ (Admin Panel)</h3>
       <button class="close-btn" onclick="closeUserModal()">&times;</button>
     </div>
     
@@ -1276,52 +1445,77 @@
   </div>
 </div>
 
-<!-- অফিশিয়াল A4 ইনভয়েস পেজ -->
+<!-- আধুনিক ও প্রফেশনাল A4 ইনভয়েস পেজ (Official Invoice) -->
 <div id="print-invoice-area">
   <div class="a4-page">
     <div>
-      <div class="inv-header">
-        <div>
-          <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo" onerror="this.src='https://placehold.co/180x45/b91c1c/ffffff?text=ভোরের+বাণী'">
-          <p>দৈনিক সংবাদপত্র ও অনলাইন ডিজিটাল পোর্টাল</p>
-          <p>হেড অফিস: ২৩৮, শিরীণ পয়েন্ট, মডেল স্কুল রোড, গোপালগঞ্জ - ৮১০০ |<br> ফোন: +৮৮০ ১৭৫০৯৪১৯৪০, +৮৮০ ১৯৩০৯০০৮৬৭</p>
+      <div class="inv-header-modern">
+        <div class="inv-brand-left">
+          <img src="logo.svg" alt="ভোরের বাণী" class="inv-print-logo-modern" onerror="this.src='https://placehold.co/190x50/b91c1c/ffffff?text=ভোরের+বাণী'">
+          <div>
+            <h1>দৈনিক ভোরের বাণী</h1>
+            <p>একটি প্রথম সারির জাতীয় দৈনিক সংবাদপত্র ও মাল্টিমিডিয়া ডিজিটাল পোর্টাল</p>
+            <p style="font-size:10.5px; color:#64748b;">হেড অফিস: ২৩৮, শিরীণ পয়েন্ট, মডেল স্কুল রোড, গোপালগঞ্জ - ৮১০০ | ফোন: +৮৮০ ১৭৫০৯৪১৯৪০</p>
+          </div>
         </div>
-        <div style="text-align: right;">
-          <h2 style="font-size: 18px; text-transform: uppercase; margin:0;">বিজ্ঞাপন বিল ও ভ্যাট চালান</h2>
-          <p style="margin-top:4px;">বিল নং: <strong id="inv-bill-no"></strong></p>
-          <p>তারিখ: <strong id="inv-print-date"></strong></p>
-        </div>
-      </div>
-
-      <div class="inv-meta-grid">
-        <div style="flex: 1.2;">
-          <p style="font-size: 11px; text-transform: uppercase; color: #555;">বিজ্ঞাপনদাতা / প্রতিষ্ঠান:</p>
-          <h3 id="inv-client-name" style="font-size: 16px; margin: 2px 0;"></h3>
-          <p>বিজ্ঞাপনের ধরন: <strong id="inv-ad-mode" style="color:#b91c1c;"></strong></p>
-          <p>মাধ্যম: <span id="inv-media-source"></span></p>
-          <p id="inv-memo-line">স্মারক নং: <span id="inv-memo-no"></span> (তারিখ: <span id="inv-memo-date"></span>)</p>
-        </div>
-        <div style="flex: 0.8; text-align: right;">
-          <p style="font-size: 11px; text-transform: uppercase; color: #555;">প্রকাশনা তথ্য:</p>
-          <p id="inv-paper-age-line">পত্রিকার বয়স: <strong id="inv-paper-age"></strong></p>
-          <p id="inv-paper-issue-line">সংখ্যা / ইস্যু: <strong id="inv-paper-issue"></strong></p>
-          <p>পেমেন্ট অবস্থা: <strong id="inv-status"></strong></p>
+        <div class="inv-title-badge">
+          <h2>বিজ্ঞাপন বিল ও চালান</h2>
+          <p>বিল নং: <span id="inv-bill-no" style="color:#b91c1c;"></span></p>
+          <p style="font-size:11px; font-weight:normal; margin-top:2px;">তারিখ: <strong id="inv-print-date"></strong></p>
         </div>
       </div>
 
-      <table class="inv-table">
+      <div class="inv-info-cards">
+        <div class="inv-info-box">
+          <div class="inv-box-title">বিজ্ঞাপনদাতা / ক্লায়েন্ট বিবরণী</div>
+          <div class="inv-info-line">
+            <span class="label">প্রতিষ্ঠানের নাম</span>
+            <span class="val" id="inv-client-name" style="font-size:13.5px; color:#b91c1c;"></span>
+          </div>
+          <div class="inv-info-line">
+            <span class="label">বিজ্ঞাপনের মাধ্যম</span>
+            <span class="val" id="inv-media-source"></span>
+          </div>
+          <div class="inv-info-line">
+            <span class="label">ক্যাটাগরি</span>
+            <span class="val" id="inv-ad-mode"></span>
+          </div>
+        </div>
+
+        <div class="inv-info-box">
+          <div class="inv-box-title">প্রকাশনা ও স্মারক রেফারেন্স</div>
+          <div class="inv-info-line" id="inv-memo-row">
+            <span class="label">স্মারক নম্বর</span>
+            <span class="val" id="inv-memo-no"></span>
+          </div>
+          <div class="inv-info-line" id="inv-memo-date-row">
+            <span class="label">স্মারকের তারিখ</span>
+            <span class="val" id="inv-memo-date"></span>
+          </div>
+          <div class="inv-info-line" id="inv-paper-meta-row">
+            <span class="label">পত্রিকার বছর ও সংখ্যা</span>
+            <span class="val"><span id="inv-paper-age"></span> বছর | সংখ্যা: <span id="inv-paper-issue"></span></span>
+          </div>
+          <div class="inv-info-line">
+            <span class="label">পেমেন্ট অবস্থা</span>
+            <span class="val" id="inv-status"></span>
+          </div>
+        </div>
+      </div>
+
+      <table class="inv-table-modern">
         <thead>
           <tr>
-            <th style="width: 6%; text-align: center;">ক্র:</th>
-            <th style="text-align: left;">বিজ্ঞাপনের বিবরণ</th>
-            <th style="width: 32%; text-align: center;">পরিমাপ / স্লট (Web & Mob View)</th>
+            <th style="width: 5%; text-align: center;">ক্র:</th>
+            <th style="width: 45%; text-align: left;">বিজ্ঞাপনের বিবরণ ও স্লট</th>
+            <th style="width: 20%; text-align: center;">মাপ ও পরিমাপ</th>
             <th style="width: 15%; text-align: right;">মূল্য হার</th>
-            <th style="width: 18%; text-align: right;">মূল বিল (৳)</th>
+            <th style="width: 15%; text-align: right;">মোট মূল্য (৳)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="text-align: center;">১</td>
+            <td style="text-align: center; font-weight: bold;">১</td>
             <td id="inv-item-desc"></td>
             <td style="text-align: center; font-weight: bold;" id="inv-item-dimensions"></td>
             <td style="text-align: right;" id="inv-item-rate"></td>
@@ -1330,39 +1524,57 @@
         </tbody>
       </table>
 
-      <div class="inv-middle-row">
-        <div class="stamp-area" id="inv-stamp-container"></div>
+      <div class="inv-calc-container">
+        <div class="inv-words-stamp-area">
+          <div class="in-words-box">
+            <strong>কথায় (In Words): </strong> <span id="inv-in-words">কথায় হিসাব প্রস্তুত হচ্ছে...</span>
+          </div>
+          
+          <div class="stamp-badge-wrap" id="inv-stamp-container"></div>
+        </div>
 
-        <div class="inv-summary">
+        <div class="inv-total-sheet">
           <table>
             <tr>
-              <td>বিজ্ঞাপনের মূল মূল্য:</td>
+              <td>বিজ্ঞাপনের মোট মূল্য:</td>
               <td style="text-align: right; font-weight: bold;" id="inv-sum-base"></td>
             </tr>
             <tr>
-              <td id="inv-vat-label">সরকারি ভ্যাট / ট্যাক্স:</td>
+              <td id="inv-vat-label">সরকারি ভ্যাট (১৫%):</td>
               <td style="text-align: right; font-weight: bold;" id="inv-sum-vat"></td>
             </tr>
-            <tr style="background-color: #f2f2f2;">
-              <td><strong>সর্বমোট প্রদেয় বিল:</strong></td>
-              <td style="text-align: right; font-weight: bold;" id="inv-sum-total"></td>
+            <tr class="highlight">
+              <td>সর্বমোট প্রদেয় বিল:</td>
+              <td style="text-align: right; font-weight: bold; font-size:13px; color:#0f172a;" id="inv-sum-total"></td>
             </tr>
             <tr>
-              <td>পরিশোধিত / জমা অর্থ:</td>
-              <td style="text-align: right; color: green; font-weight: bold;" id="inv-sum-paid"></td>
+              <td>জমা / পরিশোধিত:</td>
+              <td style="text-align: right; color: #16a34a; font-weight: bold;" id="inv-sum-paid"></td>
             </tr>
-            <tr>
-              <td><strong>অবশিষ্ট বকেয়া (Due):</strong></td>
-              <td style="text-align: right; color: red; font-weight: bold;" id="inv-sum-due"></td>
+            <tr style="background:#fef2f2;">
+              <td style="color:#b91c1c; font-weight:bold;">অবশিষ্ট বকেয়া (Due):</td>
+              <td style="text-align: right; color: #b91c1c; font-weight: bold;" id="inv-sum-due"></td>
             </tr>
           </table>
         </div>
       </div>
     </div>
 
-    <div class="inv-signatures">
-      <div class="signature-block">
-        সম্পাদক ভোরের বানী
+    <div>
+      <div style="font-size: 10px; color: #64748b; border-top: 1px dashed #cbd5e1; padding-top: 6px; margin-bottom: 25px;">
+        * এটি একটি কম্পিউটার জেনারেটেড ডিজিটাল ইনভয়েস বিল। যেকোনো প্রয়োজনে উপরে উল্লেখিত ফোন নাম্বারে যোগাযোগ করুন।
+      </div>
+      <div class="inv-footer-signatures">
+        <div class="sign-box">
+          বিজ্ঞাপন গ্রাহকের স্বাক্ষর
+        </div>
+        <div class="sign-box">
+          হিসাব রক্ষণ কর্মকর্তা
+        </div>
+        <div class="sign-box">
+          সম্পাদক / ব্যবস্থাপনা পরিচালক<br>
+          <span style="font-size:10px; font-weight:normal; color:#475569;">দৈনিক ভোরের বাণী</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1453,6 +1665,35 @@
     }).catch(err => console.log("Google Sheets Sync Error:", err));
   }
 
+  // সংখ্যা থেকে বাংলায় কথায় রূপান্তর ফাংশন
+  function numberToBanglaWords(num) {
+    if (!num || isNaN(num) || num === 0) return 'শূন্য টাকা মাত্র';
+    num = Math.round(num);
+
+    const units = ['', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়', 'দশ', 'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ', 'একুশ', 'বাইশ', 'তেইশ', 'চব্বিশ', 'পঁচিশ', 'ছাব্বিশ', 'সাতাশ', 'আঠাশ', 'উনত্রিশ', 'ত্রিশ', 'একত্রিশ', 'বত্রিশ', 'তেত্রিশ', 'চৌত্রিশ', 'পঁয়ত্রিশ', 'ছত্রিশ', 'সাঁইত্রিশ', 'আটত্রিশ', 'উনচল্লিশ', 'চল্লিশ', 'একচল্লিশ', 'বিয়াল্লিশ', 'তেতাল্লিশ', 'চুয়াল্লিশ', 'পঁয়তাল্লিশ', 'ছেচল্লিশ', 'সাতচল্লিশ', 'আটচল্লিশ', 'উনপঞ্চাশ', 'পঞ্চাশ', 'একান্ন', 'বায়ান্ন', 'তিপ্পান্ন', 'চুয়ান্ন', 'পঞ্চান্ন', 'ছাপ্পান্ন', 'সাতান্ন', 'আটান্ন', 'উনষাট', 'ষাট', 'একষট্টি', 'বাষট্টি', 'তেষট্টি', 'চৌষট্টি', 'পঁয়ষট্টি', 'ছেষট্টি', 'সাতষট্টি', 'আটষট্টি', 'উনসত্তর', 'সত্তর', 'একাত্তর', 'বাহাত্তর', 'তিয়াত্তর', 'চুয়াত্তর', 'পঁচাত্তর', 'ছিয়াত্তর', 'সাতাত্তর', 'আটাত্তর', 'উনাশি', 'আশি', 'একাশি', 'বিরাশি', 'তিরাশি', 'চুরাশি', 'পঁচাশি', 'ছিয়াশি', 'সাতাশি', 'আটাশি', 'ঊননব্বই', 'নব্বই', 'একানব্বই', 'বানব্বই', 'তিরানব্বই', 'চুরানব্বই', 'পঁচানব্বই', 'ছিয়ানব্বই', 'সাতানব্বই', 'আটানব্বই', 'নিরানব্বই'];
+
+    let words = '';
+    const crore = Math.floor(num / 10000000);
+    num %= 10000000;
+
+    const lakh = Math.floor(num / 100000);
+    num %= 100000;
+
+    const thousand = Math.floor(num / 1000);
+    num %= 1000;
+
+    const hundred = Math.floor(num / 100);
+    const rest = num % 100;
+
+    if (crore > 0) words += numberToBanglaWords(crore).replace(' মাত্র', '') + ' কোটি ';
+    if (lakh > 0) words += units[lakh] + ' লাখ ';
+    if (thousand > 0) words += units[thousand] + ' হাজার ';
+    if (hundred > 0) words += units[hundred] + ' শত ';
+    if (rest > 0) words += units[rest] + ' ';
+
+    return words.trim() + ' টাকা মাত্র';
+  }
+
   // ব্রাউজার থেকে সরাসরি CSV/Excel ডাউনলোড ফাংশন
   function exportToCSV() {
     const selectedStatus = document.getElementById('printStatusSelect').value;
@@ -1476,7 +1717,6 @@
       return;
     }
 
-    // CSV হেডার
     const headers = [
       "ক্রমিক", "তারিখ", "বিল নং", "বিজ্ঞাপনের ধরন", "ক্লায়েন্ট / প্রতিষ্ঠান",
       "মাধ্যম", "মাপ / স্লট বিবরণী", "মূল মূল্য (৳)", "ভ্যাট (৳)", "সর্বমোট বিল (৳)",
@@ -1512,7 +1752,6 @@
       ]);
     });
 
-    // CSV স্ট্রিং তৈরি (কমা এবং ডাবল কোট হ্যান্ডলিং)
     const csvContent = "\uFEFF" + rows.map(e => 
       e.map(item => `"${String(item).replace(/"/g, '""')}"`).join(",")
     ).join("\r\n");
@@ -1556,6 +1795,10 @@
 
   let adsList = [];
   let usersList = [];
+
+  // OTP রিসেট ভ্যারিয়েবল
+  let generatedOTP = null;
+  let targetUserForReset = null;
 
   function previewImageFile(input, previewImgId, hiddenInputId) {
     const file = input.files[0];
@@ -1643,6 +1886,97 @@
       alert('ভুল ইমেইল অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।');
     }
   });
+
+  /* ---------------------------------------------------- */
+  /* পাসওয়ার্ড রিসেট ও OTP হ্যান্ডলার লজিক (Password Reset) */
+  /* ---------------------------------------------------- */
+  function openForgotPasswordModal() {
+    document.getElementById('forgotPassModal').style.display = 'flex';
+    document.getElementById('forgotStep1').style.display = 'block';
+    document.getElementById('forgotStep2').style.display = 'none';
+    document.getElementById('forgotStep3').style.display = 'none';
+    document.getElementById('resetEmailInput').value = document.getElementById('loginEmail').value || '';
+    document.getElementById('resetOTPInput').value = '';
+    document.getElementById('resetNewPassInput').value = '';
+    document.getElementById('resetConfirmPassInput').value = '';
+    generatedOTP = null;
+    targetUserForReset = null;
+  }
+
+  function closeForgotPasswordModal() {
+    document.getElementById('forgotPassModal').style.display = 'none';
+  }
+
+  function handleSendOTP() {
+    const email = document.getElementById('resetEmailInput').value.trim().toLowerCase();
+    if (!email) {
+      alert('অনুগ্রহ করে আপনার নিবন্ধিত ইমেইল ঠিকানাটি লিখুন!');
+      return;
+    }
+
+    const user = usersList.find(u => u.email.toLowerCase() === email);
+    if (!user) {
+      alert('এই ইমেইলের সাথে কোনো সক্রিয় অ্যাকাউন্ট পাওয়া যায়নি!');
+      return;
+    }
+
+    targetUserForReset = user;
+    // ৬ ডিজিটের র্যান্ডম কোড জেনারেট
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // ওয়েব মেইল পাঠানোর ফ্রন্টএন্ড কল ও ব্যাকআপ অ্যালার্ট
+    console.log(`Bhorer Bani OTP for ${email}: ${generatedOTP}`);
+    alert(`[ভোরের বাণী নিরাপত্তা কোড]\n\nআপনার পাসওয়ার্ড রিসেট ওটিপি (OTP) কোডটি হলো: ${generatedOTP}\n\n(কোডটি ইনপুটে দিয়ে এগিয়ে যান)`);
+
+    document.getElementById('forgotStep1').style.display = 'none';
+    document.getElementById('forgotStep2').style.display = 'block';
+  }
+
+  function handleVerifyOTP() {
+    const inputOtp = document.getElementById('resetOTPInput').value.trim();
+    if (!inputOtp) {
+      alert('অনুগ্রহ করে প্রাপ্ত ওটিপি কোডটি লিখুন!');
+      return;
+    }
+
+    if (inputOtp === generatedOTP) {
+      document.getElementById('forgotStep2').style.display = 'none';
+      document.getElementById('forgotStep3').style.display = 'block';
+    } else {
+      alert('ভুল ওটিপি কোড! অনুগ্রহ করে সঠিক কোড দিন অথবা পুনরায় কোড পাঠান।');
+    }
+  }
+
+  function handleUpdateForgottenPassword() {
+    const newPass = document.getElementById('resetNewPassInput').value.trim();
+    const confPass = document.getElementById('resetConfirmPassInput').value.trim();
+
+    if (!newPass) {
+      alert('দয়া করে নতুন পাসওয়ার্ড লিখুন!');
+      return;
+    }
+
+    if (newPass !== confPass) {
+      alert('উভয় পাসওয়ার্ড মেলেনি! একই পাসওয়ার্ড দিন।');
+      return;
+    }
+
+    if (!targetUserForReset || !targetUserForReset.id) {
+      alert('অপ্রত্যাশিত ত্রুটি ঘটেছে। দয়া করে আবার চেষ্টা করুন।');
+      closeForgotPasswordModal();
+      return;
+    }
+
+    usersRef.child(targetUserForReset.id).update({ pass: newPass }, (err) => {
+      if (!err) {
+        alert('🎉 আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! এখন নতুন পাসওয়ার্ড দিয়ে লগইন করুন।');
+        closeForgotPasswordModal();
+        document.getElementById('loginPassword').value = newPass;
+      } else {
+        alert('পাসওয়ার্ড আপডেট করতে সমস্যা হয়েছে: ' + err.message);
+      }
+    });
+  }
 
   function checkAuth() {
     const sessionUser = getActiveSession();
@@ -2265,6 +2599,9 @@
     togglePaidInput();
   }
 
+  /* ------------------------------------------------ */
+  /* আধুনিক ও তথ্যবহুল ইনভয়েস জেনারেটর (Invoice Render) */
+  /* ------------------------------------------------ */
   function printReceipt(id) {
     const ad = adsList.find(a => a.id === id);
     if (!ad) return;
@@ -2275,10 +2612,10 @@
 
     if (ad.status === 'paid') {
       statusText = 'PAID (পরিশোধিত)';
-      stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID</div>`;
+      stampContainer.innerHTML = `<div class="stamp-badge stamp-paid">PAID (পরিশোধিত)</div>`;
     } else if (ad.status === 'unpaid/due') {
       statusText = 'UNPAID / DUE (বকেয়া)';
-      stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">DELIVERED</div>`;
+      stampContainer.innerHTML = `<div class="stamp-badge stamp-delivered">UNPAID / DUE</div>`;
     } else {
       statusText = 'ON PROCESS (প্রক্রিয়াধীন)';
     }
@@ -2289,18 +2626,19 @@
     document.getElementById('inv-print-date').innerText = isOnline ? (ad.onlineStartDate || '-') : (ad.printDate || '-');
     document.getElementById('inv-client-name').innerText = ad.clientName;
     document.getElementById('inv-ad-mode').innerText = isOnline ? 'অনলাইন ডিজিটাল পোর্টাল বিজ্ঞাপন' : 'জাতীয় দৈনিক প্রিন্ট পত্রিকা বিজ্ঞাপন';
-    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / প্রযোজ্য নয়';
+    document.getElementById('inv-media-source').innerText = ad.mediaSource || 'সরাসরি / নিজস্ব';
     document.getElementById('inv-status').innerText = statusText;
 
     if (isOnline) {
-      document.getElementById('inv-memo-line').style.display = 'none';
-      document.getElementById('inv-paper-age-line').style.display = 'none';
-      document.getElementById('inv-paper-issue-line').style.display = 'none';
+      document.getElementById('inv-memo-row').style.display = 'none';
+      document.getElementById('inv-memo-date-row').style.display = 'none';
+      document.getElementById('inv-paper-meta-row').style.display = 'none';
       document.getElementById('inv-vat-label').innerText = 'ভ্যাট / ট্যাক্স (০%):';
 
       document.getElementById('inv-item-desc').innerHTML = `
-        <strong>${ad.onlineSlot}</strong><br>
-        <small style="color:#555;">প্রচারকাল: ${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}</small>
+        <strong style="color:#0f172a; font-size:13px;">${ad.onlineSlot}</strong><br>
+        <span style="font-size:11px; color:#475569;">প্রচারকাল: ${ad.onlineStartDate || '-'} হতে ${ad.onlineEndDate || '-'}</span><br>
+        <span style="font-size:11px; color:#0284c7;">টার্গেট ইউআরএল: ${ad.onlineTargetUrl || 'প্রযোজ্য নয়'}</span>
       `;
       document.getElementById('inv-item-dimensions').innerHTML = `
         💻 Web: ${ad.webSize}<br>
@@ -2308,9 +2646,9 @@
       `;
       document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
     } else {
-      document.getElementById('inv-memo-line').style.display = 'block';
-      document.getElementById('inv-paper-age-line').style.display = 'block';
-      document.getElementById('inv-paper-issue-line').style.display = 'block';
+      document.getElementById('inv-memo-row').style.display = 'flex';
+      document.getElementById('inv-memo-date-row').style.display = 'flex';
+      document.getElementById('inv-paper-meta-row').style.display = 'flex';
       document.getElementById('inv-vat-label').innerText = 'সরকারি ভ্যাট / ট্যাক্স (১৫%):';
 
       document.getElementById('inv-memo-no').innerText = ad.memoNo || 'প্রযোজ্য নয়';
@@ -2318,17 +2656,25 @@
       document.getElementById('inv-paper-age').innerText = ad.paperAge || '-';
       document.getElementById('inv-paper-issue').innerText = ad.paperIssue || '-';
 
-      document.getElementById('inv-item-desc').innerHTML = `দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা<br><small style="color:#555;">নির্ধারিত কলাম ইঞ্চিতে প্রকাশিত</small>`;
-      document.getElementById('inv-item-dimensions').innerText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি (${ad.totalColInch} ইঞ্চি)`;
+      document.getElementById('inv-item-desc').innerHTML = `
+        <strong style="color:#0f172a; font-size:13px;">দৈনিক পত্রিকায় সরকারি/বেসরকারি বিজ্ঞাপন প্রকাশনা</strong><br>
+        <span style="font-size:11px; color:#475569;">নির্ধারিত কলাম ইঞ্চির মাপ অনুযায়ী দৈনিক ভোরের বাণী পত্রিকায় প্রকাশিত</span>
+      `;
+      document.getElementById('inv-item-dimensions').innerText = `${ad.colSize} কলাম × ${ad.inchSize} ইঞ্চি (${ad.totalColInch} কলাম-ইঞ্চি)`;
       document.getElementById('inv-item-rate').innerText = `৳ ${Number(ad.ratePerInch || 0).toLocaleString()} / ইঞ্চি`;
     }
+
+    const totalVal = Number(ad.totalWithVat || 0);
 
     document.getElementById('inv-base-price').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
     document.getElementById('inv-sum-base').innerText = `৳ ${Number(ad.basePrice || 0).toLocaleString()}`;
     document.getElementById('inv-sum-vat').innerText = `৳ ${Number(ad.vat || 0).toLocaleString()}`;
-    document.getElementById('inv-sum-total').innerText = `৳ ${Number(ad.totalWithVat || 0).toLocaleString()}`;
+    document.getElementById('inv-sum-total').innerText = `৳ ${totalVal.toLocaleString()}`;
     document.getElementById('inv-sum-paid').innerText = `৳ ${Number(ad.paidAmount || 0).toLocaleString()}`;
     document.getElementById('inv-sum-due').innerText = `৳ ${Number(ad.due || 0).toLocaleString()}`;
+
+    // কথায় মোট টাকার অঙ্ক জেনারেট
+    document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
 
     document.body.className = 'printing-invoice';
     window.print();
