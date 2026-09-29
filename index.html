@@ -9,6 +9,8 @@
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <style>
     :root {
@@ -634,9 +636,6 @@
       display: none;
     }
 
-    /* ---------------------------------------------------- */
-    /* আধুনিক, প্রফেশনাল ও ঝকঝকে A4 ইনভয়েস স্টাইলিং */
-    /* ---------------------------------------------------- */
     @media print {
       @page {
         size: A4 portrait;
@@ -1018,37 +1017,42 @@
   </div>
 </div>
 
-<!-- পাসওয়ার্ড ভুলে গেছেন (OTP Reset) মডাল -->
+<!-- পাসওয়ার্ড ভুলে গেছেন (Email OTP Reset) মডাল -->
 <div class="modal-backdrop" id="forgotPassModal">
-  <div class="modal-box" style="max-width: 420px;">
+  <div class="modal-box" style="max-width: 430px;">
     <div class="modal-header">
-      <h3 style="margin:0; font-size:16px;">🔑 পাসওয়ার্ড রিসেট ও ওটিপি ভেরিফিকেশন</h3>
+      <h3 style="margin:0; font-size:16px;">🔑 ইমেইল ওটিপি (OTP) ভেরিফিকেশন</h3>
       <button class="close-btn" onclick="closeForgotPasswordModal()">&times;</button>
     </div>
 
+    <!-- ধাপ ১: ইমেইল গ্রহণ ও কোড জিমেইলে প্রেরণ -->
     <div id="forgotStep1">
-      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাকাউন্টের নিবন্ধিত ইমেইলটি দিন। ওই ইমেইলে ৬-ডিজিটের একটি গোপন কোড (OTP) পাঠানো হবে।</p>
+      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাকাউন্টের নিবন্ধিত ইমেইলটি দিন। ওই ইমেইলে সরাসরি ৬-ডিজিটের একটি গোপন কোড (OTP) পাঠানো হবে।</p>
       <div class="form-group">
-        <label>নিবন্ধিত ইমেইল</label>
+        <label>নিবন্ধিত ইমেইল ঠিকানা</label>
         <input type="email" id="resetEmailInput" placeholder="আপনার ইমেইল দিন...">
       </div>
-      <button class="btn btn-save" onclick="handleSendOTP()">ভেরিফিকেশন কোড পাঠান</button>
+      <button class="btn btn-save" id="btnSendOtp" onclick="handleSendOTP()">ইমেইলে ওটিপি পাঠান</button>
     </div>
 
+    <!-- ধাপ ২: কোড ইনপুট ও ভেরিফাই -->
     <div id="forgotStep2" style="display: none;">
-      <p style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:12px;">✅ আপনার ইমেইলে ৬ ডিজিটের কোড পাঠানো হয়েছে!</p>
+      <p style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:12px;">
+        ✉️ আপনার ইমেইলে ওটিপি পাঠানো হয়েছে! অনুগ্রহ করে ইনবক্স অথবা স্প্যাম (Spam) ফোল্ডার চেক করুন।
+      </p>
       <div class="form-group">
         <label>৬ ডিজিটের ওটিপি কোড (OTP)</label>
-        <input type="text" id="resetOTPInput" maxlength="6" placeholder="উদা: 489210" style="letter-spacing: 4px; font-weight: bold; font-size: 16px; text-align: center;">
+        <input type="text" id="resetOTPInput" maxlength="6" placeholder="••••••" style="letter-spacing: 6px; font-weight: bold; font-size: 18px; text-align: center;">
       </div>
       <button class="btn btn-save" onclick="handleVerifyOTP()">কোড যাচাই করুন</button>
-      <div style="text-align: center; margin-top: 8px;">
-        <a style="font-size: 11px; color:#b91c1c; cursor:pointer;" onclick="handleSendOTP()">পুনরায় কোড পাঠান (Resend)</a>
+      <div style="text-align: center; margin-top: 10px;">
+        <a style="font-size: 11px; color:#b91c1c; cursor:pointer;" onclick="handleSendOTP()">পুনরায় ইমেইলে কোড পাঠান (Resend)</a>
       </div>
     </div>
 
+    <!-- ধাপ ৩: নতুন পাসওয়ার্ড সেট -->
     <div id="forgotStep3" style="display: none;">
-      <p style="font-size:12px; color:#0f172a; margin-bottom:12px;">যাচাই সফল হয়েছে! আপনার নতুন পাসওয়ার্ড সেট করুন।</p>
+      <p style="font-size:12px; color:#0f172a; margin-bottom:12px;">ইমেইল যাচাই সফল হয়েছে! আপনার নতুন পাসওয়ার্ড সেট করুন।</p>
       <div class="form-group">
         <label>নতুন পাসওয়ার্ড</label>
         <input type="password" id="resetNewPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
@@ -1057,7 +1061,7 @@
         <label>নতুন পাসওয়ার্ড নিশ্চিত করুন</label>
         <input type="password" id="resetConfirmPassInput" placeholder="পুনরায় লিখুন">
       </div>
-      <button class="btn btn-save" onclick="handleUpdateForgottenPassword()">পাসওয়ার্ড পরিবর্তন সম্পন্ন করুন</button>
+      <button class="btn btn-save" onclick="handleUpdateForgottenPassword()">পাসওয়ার্ড আপডেট করুন</button>
     </div>
   </div>
 </div>
@@ -1715,6 +1719,18 @@
 </div>
 
 <script>
+  /* ---------------------------------------------------- */
+  /* EMAILJS কনফিগারেশন */
+  /* ---------------------------------------------------- */
+  const EMAILJS_SERVICE_ID = "service_hu4darv";
+  const EMAILJS_TEMPLATE_ID = "template_rakf0oi";
+  const EMAILJS_PUBLIC_KEY = "vIAXWzABkqcccdL0I";
+
+  // EmailJS ইনিশিয়ালাইজেশন
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+
   const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyI9g11s_Pw_5bWp2k7DgmqukUGONqUWmfB9UI_OpslB_PI_KcuDsiOkCxwS2n1p8TQww/exec";
 
   function syncToGoogleSheet(adPayload) {
@@ -1965,6 +1981,9 @@
     }
   });
 
+  /* ---------------------------------------------------- */
+  /* সরাসরি ইমেইলে OTP প্রেরণ ও ভেরিফিকেশন লজিক */
+  /* ---------------------------------------------------- */
   function openForgotPasswordModal() {
     document.getElementById('forgotPassModal').style.display = 'flex';
     document.getElementById('forgotStep1').style.display = 'block';
@@ -1974,6 +1993,11 @@
     document.getElementById('resetOTPInput').value = '';
     document.getElementById('resetNewPassInput').value = '';
     document.getElementById('resetConfirmPassInput').value = '';
+    
+    const sendBtn = document.getElementById('btnSendOtp');
+    sendBtn.innerText = "ইমেইলে ওটিপি পাঠান";
+    sendBtn.disabled = false;
+
     generatedOTP = null;
     targetUserForReset = null;
   }
@@ -1982,7 +2006,7 @@
     document.getElementById('forgotPassModal').style.display = 'none';
   }
 
-  function handleSendOTP() {
+  async function handleSendOTP() {
     const email = document.getElementById('resetEmailInput').value.trim().toLowerCase();
     if (!email) {
       alert('অনুগ্রহ করে আপনার নিবন্ধিত ইমেইল ঠিকানাটি লিখুন!');
@@ -1998,11 +2022,30 @@
     targetUserForReset = user;
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-    console.log(`Bhorer Bani OTP for ${email}: ${generatedOTP}`);
-    alert(`[ভোরের বাণী নিরাপত্তা কোড]\n\nআপনার পাসওয়ার্ড রিসেট ওটিপি (OTP) কোডটি হলো: ${generatedOTP}\n\n(কোডটি ইনপুটে দিয়ে এগিয়ে যান)`);
+    const sendBtn = document.getElementById('btnSendOtp');
+    sendBtn.innerText = "ইমেইল পাঠানো হচ্ছে...";
+    sendBtn.disabled = true;
 
-    document.getElementById('forgotStep1').style.display = 'none';
-    document.getElementById('forgotStep2').style.display = 'block';
+    // EmailJS টেমপ্লেট ভ্যারিয়েবল
+    const templateParams = {
+      to_email: email,
+      to_name: user.name || 'ব্যবহারকারী',
+      passcode: generatedOTP,
+      otp_code: generatedOTP,
+      message: `আপনার ভোরের বাণী বিজ্ঞাপন অ্যাকাউন্টের পাসওয়ার্ড রিসেট কোডটি হলো: ${generatedOTP}`
+    };
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+      document.getElementById('forgotStep1').style.display = 'none';
+      document.getElementById('forgotStep2').style.display = 'block';
+    } catch (err) {
+      console.error("EmailJS Error:", err);
+      alert('ইমেইল পাঠাতে সমস্যা হয়েছে: ' + (err.text || err.message || 'দয়া করে EmailJS সেটিংস যাচাই করুন'));
+    } finally {
+      sendBtn.innerText = "ইমেইলে ওটিপি পাঠান";
+      sendBtn.disabled = false;
+    }
   }
 
   function handleVerifyOTP() {
@@ -2016,7 +2059,7 @@
       document.getElementById('forgotStep2').style.display = 'none';
       document.getElementById('forgotStep3').style.display = 'block';
     } else {
-      alert('ভুল ওটিপি কোড! অনুগ্রহ করে সঠিক কোড দিন অথবা পুনরায় কোড পাঠান।');
+      alert('ভুল ওটিপি কোড! অনুগ্রহ করে আপনার ইমেইল ইনবক্স চেক করে সঠিক কোড দিন।');
     }
   }
 
@@ -2042,7 +2085,7 @@
 
     usersRef.child(targetUserForReset.id).update({ pass: newPass }, (err) => {
       if (!err) {
-        alert('🎉 আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! এখন নতুন পাসওয়ার্ড দিয়ে লগইন করুন।');
+        alert('🎉 আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! এখন লগইন করুন।');
         closeForgotPasswordModal();
         document.getElementById('loginPassword').value = newPass;
       } else {
@@ -2672,9 +2715,6 @@
     togglePaidInput();
   }
 
-  /* ---------------------------------------------------- */
-  /* ১০০% ত্রুটিমুক্ত ইনভয়েস ও স্ট্যান্ডার্ড QR Code জেনারেটর */
-  /* ---------------------------------------------------- */
   function printReceipt(id) {
     try {
       const ad = adsList.find(a => a.id === id);
@@ -2750,7 +2790,6 @@
       document.getElementById('inv-sum-paid').innerText = `৳ ${Number(ad.paidAmount || 0).toLocaleString()}`;
       document.getElementById('inv-sum-due').innerText = `৳ ${Number(ad.due || 0).toLocaleString()}`;
 
-      // কথায় টাকা
       document.getElementById('inv-in-words').innerText = numberToBanglaWords(totalVal);
 
       // কিউআর কোড জেনারেশন (Standard Clean UTF-8 Format)
